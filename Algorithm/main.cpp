@@ -4,19 +4,22 @@
 #include <iostream>
 #include <cmath>
 
+#include "Application.h"
 
 // callback
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
 
 // window settings
-const unsigned int SCR_WIDTH = 800;
-const unsigned int SCR_HEIGHT = 600;
+const unsigned int SCR_WIDTH = 1600;
+const unsigned int SCR_HEIGHT = 800;
 
 // time variables
 float deltaTime = 0.0f;		// time between current frame and last frame
 float lastFrame = 0.0f;		// time of last frame
 
+// application
+Application* app;
 
 int main()
 {
@@ -45,29 +48,40 @@ int main()
 		return -1;
 	}
 
+	// configure application
+	app = new Application(SCR_WIDTH, SCR_HEIGHT);
+	app->Init();
 
 	// render loop
 	while (!glfwWindowShouldClose(window))
 	{
 		// time
-		float currentFrame = glfwGetTime();
+		float currentFrame = (float)glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
 
 
 		// input
 		processInput(window);
+		app->ProcessInput(deltaTime);
+
+
+		// update
+		app->Update(deltaTime);
 
 
 		// rendering commands here
 		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
-
+		app->Draw();
 
 		// check and call events and swap the buffers
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
+
+	// delete application
+	delete app;
 
 	// glfw: terminate, clearing all previously allocated GLFW resources
 	glfwTerminate();
@@ -76,6 +90,7 @@ int main()
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
+	app->ChangeResolution(width, height);
 	glViewport(0, 0, width, height);
 }
 
