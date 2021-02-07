@@ -46,7 +46,8 @@ void Table::Init()
 void Table::Draw()
 {
 	ResourceManager::GetShader("line").Use();
-	glLineWidth(2.5f);
+
+	glLineWidth(2.0f);
 
 	glm::mat4 model = glm::mat4(1.0f);
 
@@ -55,7 +56,7 @@ void Table::Draw()
 	{
 		model = glm::mat4(1.0f);
 		model = glm::translate(model, glm::vec3(0.0f, y, 0.0f));
-		model = glm::scale(model, glm::vec3((float)Width, 0.0f, 1.0f));
+		model = glm::scale(model, glm::vec3((float)Width, 0.0f, 0.0f));
 		ResourceManager::GetShader("line").SetMatrix4f("model", model);
 
 		glBindVertexArray(RowVAO);
@@ -67,7 +68,7 @@ void Table::Draw()
 	{
 		model = glm::mat4(1.0f);
 		model = glm::translate(model, glm::vec3(x, 0.0f, 0.0f));
-		model = glm::scale(model, glm::vec3(0.0f, float(Height), 1.0f));
+		model = glm::scale(model, glm::vec3(0.0f, float(Height), 0.0f));
 		ResourceManager::GetShader("line").SetMatrix4f("model", model);
 
 		glBindVertexArray(ColumnVAO);
@@ -75,7 +76,7 @@ void Table::Draw()
 	}
 
 	glBindVertexArray(0);
-	glLineWidth(1.0f);
+	glLineWidth(0.0f);
 }
 
 void Table::ChangeResolution(unsigned int width, unsigned int height)

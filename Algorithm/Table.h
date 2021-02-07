@@ -9,6 +9,7 @@ public:
 	// constructor
 	Table(unsigned int width, unsigned int height, float squareSize);
 
+	// TODO: draw a texture of the table
 	void Draw();
 	void ChangeResolution(unsigned int width, unsigned int height);
 

@@ -90,6 +90,7 @@ int main()
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
+	// TODO: clamp these values to make a perfect table
 	app->ChangeResolution(width, height);
 	glViewport(0, 0, width, height);
 }
