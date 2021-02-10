@@ -19,17 +19,16 @@ public:
 	void Update(float deltaTime);
 	void Draw();
 	void ProcessInput(float deltaTime);
-	void ChangeResolution(unsigned int width, unsigned int height);
+
+	// todo : test
+	// components
+	Table* TableMatrix;
 
 private:
 	// state
 	unsigned int Width, Height;
-
-	// components
-	Table* TableMatrix;
-
-	// projection matrix
-	glm::mat4 projection;
+	unsigned int TableWidth, TableHeight;
+	float SquareSize;
 
 };
 

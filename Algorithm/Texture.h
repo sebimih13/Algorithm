@@ -13,7 +13,7 @@ public:
 	GLuint ID;
 
 	// texture image dimensions : width and height of loaded image in pixels
-	unsigned int Width, Height;	
+	unsigned int Width, Height;
 
 	// texture format
 	unsigned int Internal_Format;	// format of texture object

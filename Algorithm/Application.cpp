@@ -10,7 +10,11 @@ Application::Application(unsigned int width, unsigned int height)
 {
 	Width = width;
 	Height = height;
-	projection = glm::ortho(0.0f, (float)Width, (float)Height, 0.0f, -1.0f, 1.0f);
+
+	// todo : calibrate values
+	TableWidth = width - 40;
+	TableHeight = height - 140;		
+	SquareSize = 30.0f;
 }
 
 Application::~Application()
@@ -20,15 +24,22 @@ Application::~Application()
 
 void Application::Init()
 {
+	// configure table
+	TableMatrix = new Table(TableWidth, TableHeight, SquareSize);
+
 	// load shaders
 	ResourceManager::LoadShader("shaders/line.vert", "shaders/line.frag", nullptr, "line");
+	ResourceManager::LoadShader("shaders/sprite.vert", "shaders/sprite.frag", nullptr, "sprite");
 
 	// configure shader
+	glm::mat4 projection = glm::ortho(0.0f, (float)TableWidth, (float)TableHeight, 0.0f, -1.0f, 1.0f);
 	ResourceManager::GetShader("line").Use();
 	ResourceManager::GetShader("line").SetMatrix4f("projection", projection);
 
-	// configure table
-	TableMatrix = new Table(Width, Height, 25.0f);
+	projection = glm::ortho(0.0f, (float)Width, (float)Height, 0.0f, -1.0f, 1.0f);
+	ResourceManager::GetShader("sprite").Use();
+	ResourceManager::GetShader("sprite").SetMatrix4f("projection", projection);
+	ResourceManager::GetShader("sprite").SetInteger("sprite", 0);
 }
 
 void Application::Update(float deltaTime)
@@ -38,19 +49,12 @@ void Application::Update(float deltaTime)
 
 void Application::Draw()
 {
-	TableMatrix->Draw();
+	unsigned int diff = (Width - TableWidth) / 2;
+	TableMatrix->DrawSprite(glm::vec3(diff, Height - TableHeight - diff, 0.0f), Width, Height);
 }
 
 void Application::ProcessInput(float deltaTime)
 {
-
+	
 }
 
-void Application::ChangeResolution(unsigned int width, unsigned int height)
-{
-	Width = width;
-	Height = height;
-	projection = glm::ortho(0.0f, (float)Width, (float)Height, 0.0f, -1.0f, 1.0f);
-	ResourceManager::GetShader("line").SetMatrix4f("projection", projection);
-	TableMatrix->ChangeResolution(Width, Height);
-}

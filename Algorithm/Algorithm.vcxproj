@@ -95,6 +95,8 @@
   <ItemGroup>
     <None Include="shaders\line.frag" />
     <None Include="shaders\line.vert" />
+    <None Include="shaders\sprite.frag" />
+    <None Include="shaders\sprite.vert" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />

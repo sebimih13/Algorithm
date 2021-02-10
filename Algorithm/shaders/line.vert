@@ -1,8 +1,6 @@
 #version 330 core
 
-layout (location = 0) in vec2 aPos;		
-
-out vec2 TexCoords;
+layout (location = 0) in vec2 aPos;
 
 uniform mat4 model;
 uniform mat4 projection;
