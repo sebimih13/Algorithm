@@ -19,10 +19,7 @@ public:
 	void Update(float deltaTime);
 	void Draw();
 	void ProcessInput(float deltaTime);
-
-	// todo : test
-	// components
-	Table* TableMatrix;
+	void SetMousePosition(double xpos, double ypos);
 
 private:
 	// state
@@ -30,6 +27,11 @@ private:
 	unsigned int TableWidth, TableHeight;
 	float SquareSize;
 
+	// mouse position
+	double MouseX, MouseY;
+
+	// components
+	Table* TableMatrix;
 };
 
 #endif

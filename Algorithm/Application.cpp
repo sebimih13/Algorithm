@@ -11,7 +11,6 @@ Application::Application(unsigned int width, unsigned int height)
 	Width = width;
 	Height = height;
 
-	// todo : calibrate values
 	TableWidth = width - 40;
 	TableHeight = height - 140;		
 	SquareSize = 30.0f;
@@ -25,7 +24,10 @@ Application::~Application()
 void Application::Init()
 {
 	// configure table
-	TableMatrix = new Table(TableWidth, TableHeight, SquareSize);
+	TableMatrix = new Table(TableWidth, TableHeight, SquareSize, Width, Height);
+
+	unsigned int diff = (Width - TableWidth) / 2;
+	TableMatrix->SetSpritePosition(glm::vec3(diff, Height - TableHeight - diff, 0.0f));
 
 	// load shaders
 	ResourceManager::LoadShader("shaders/line.vert", "shaders/line.frag", nullptr, "line");
@@ -49,12 +51,18 @@ void Application::Update(float deltaTime)
 
 void Application::Draw()
 {
-	unsigned int diff = (Width - TableWidth) / 2;
-	TableMatrix->DrawSprite(glm::vec3(diff, Height - TableHeight - diff, 0.0f), Width, Height);
+	TableMatrix->DrawSprite();
 }
 
 void Application::ProcessInput(float deltaTime)
 {
 	
+}
+
+void Application::SetMousePosition(double xpos, double ypos)
+{
+	MouseX = xpos;
+	MouseY = ypos;
+	TableMatrix->ProcessInput(xpos, ypos);
 }
 

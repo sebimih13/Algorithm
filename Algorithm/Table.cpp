@@ -3,8 +3,9 @@
 
 #include <iostream>
 
-Table::Table(unsigned int width, unsigned int height, float squareSize)
-	: Width(width), Height(height), SquareSize(squareSize), SquareY(-1), SquareX(-1), NrRows(-1), NrColumns(-1), White(1.0f, 1.0f, 1.0f), Blue(0.0f, 0.0f, 1.0f)
+Table::Table(unsigned int width, unsigned int height, float squareSize, unsigned int windowWidth, unsigned int windowHeight)
+	: Width(width), Height(height), SquareSize(squareSize), SquareY(-1), SquareX(-1), NrRows(-1), NrColumns(-1), White(1.0f, 1.0f, 1.0f), Blue(0.0f, 0.0f, 1.0f),
+	  WindowWidth(windowWidth), WindowHeight(windowHeight)
 {
 	for (float y = 0.0f; y <= (float)Height; y += SquareSize)
 		NrRows++;
@@ -84,11 +85,11 @@ void Table::InitRenderData()
 	glBindVertexArray(0);
 }
 
-void Table::DrawSprite(glm::vec2 position, unsigned int width, unsigned int height)
+void Table::DrawSprite()
 {
 	glViewport(0, 0, Width, Height);
 	Draw();
-	glViewport(0, 0, width, height);
+	glViewport(0, 0, WindowWidth, WindowHeight);
 
 	ResourceManager::GetShader("sprite").Use();
 
@@ -109,7 +110,7 @@ void Table::DrawSprite(glm::vec2 position, unsigned int width, unsigned int heig
 void Table::Draw()
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, FBO);
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);		// todo : change background color
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	ResourceManager::GetShader("line").Use();
@@ -142,11 +143,8 @@ void Table::Draw()
 		glDrawArrays(GL_LINES, 0, 2);
 	}
 
-	// todo : if is is selected a box, draw an outline
 	if (SquareX != -1 && SquareY != -1)
-	{
 		DrawOutline();
-	}
 
 	glBindVertexArray(0);
 	glLineWidth(1.0f);
@@ -156,18 +154,10 @@ void Table::Draw()
 
 void Table::ProcessInput(double xpos, double ypos)
 {
-	// todo : process mouse position
 	// transform to texture coordinates
-
-	// todo : change this to parameters
-	glm::vec2 position = glm::vec2(20.0f, 120.0f);
-
-	// std::cout << xpos << ' ' << ypos << "      ";
 
 	xpos -= position.x;
 	ypos -= position.y;
-
-	// std::cout << xpos << ' ' << ypos << "      ";
 
 	SquareX = ypos / SquareSize;
 	SquareY = xpos / SquareSize;
@@ -179,7 +169,7 @@ void Table::ProcessInput(double xpos, double ypos)
 		SquareY = -1;
 	} 
 
-	// std::cout << NrRows << ' ' << NrColumns << '\n';
+	// todo
 	std::cout << "Square : " << SquareX << ' ' << SquareY << '\n';
 }
 
@@ -215,5 +205,20 @@ void Table::DrawOutline()
 		glBindVertexArray(ColumnVAO);
 		glDrawArrays(GL_LINES, 0, 2);
 	}
+}
+
+void Table::SetSpritePosition(glm::vec2 pos)
+{
+	position = pos; 
+}
+
+void Table::DrawStart()
+{
+
+}
+
+void Table::DrawFinish()
+{
+
 }
 

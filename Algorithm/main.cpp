@@ -8,7 +8,7 @@
 
 // callback
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-void processInput(GLFWwindow* window);
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 
 // window settings
@@ -18,11 +18,6 @@ const unsigned int SCR_HEIGHT = 800;
 // time variables
 float deltaTime = 0.0f;		// time between current frame and last frame
 float lastFrame = 0.0f;		// time of last frame
-
-// mouse settings
-bool firstMouse = true;
-double lastX = 0.0;
-double lastY = 0.0;
 
 // application
 Application* app;
@@ -46,6 +41,7 @@ int main()
 	}
 	glfwMakeContextCurrent(window);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+	glfwSetKeyCallback(window, key_callback);
 	glfwSetCursorPosCallback(window, mouse_callback);
 
 	// glad: load all OpenGL function pointers
@@ -70,11 +66,8 @@ int main()
 
 
 		// input
-		processInput(window);
 		app->ProcessInput(deltaTime);
 
-		// todo : test
-		app->TableMatrix->ProcessInput(lastX, lastY);
 
 		// update
 		app->Update(deltaTime);
@@ -103,7 +96,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 	glViewport(0, 0, width, height);
 }
 
-void processInput(GLFWwindow* window)
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
 {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
@@ -111,14 +104,6 @@ void processInput(GLFWwindow* window)
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
-	if (firstMouse)
-	{
-		lastX = xpos;
-		lastY = ypos;
-		firstMouse = false;
-	}
-
-	lastX = xpos;
-	lastY = ypos;
+	app->SetMousePosition(xpos, ypos);
 }
 

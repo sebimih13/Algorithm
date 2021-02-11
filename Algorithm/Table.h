@@ -12,40 +12,38 @@ class Table
 {
 public:
 	// constructor
-	Table(unsigned int width, unsigned int height, float squareSize);
+	Table(unsigned int width, unsigned int height, float squareSize, unsigned int windowWidth, unsigned int windowHeight);
 
-	// Draw table as a texture
-	void DrawSprite(glm::vec2 position, unsigned int width, unsigned int height);
+	// draw table as a texture
+	void DrawSprite();
 
 	// process mouse input
 	void ProcessInput(double xpos, double ypos);
 
+	// set the position of the textures top-right corner
+	void SetSpritePosition(glm::vec2 pos);
+
 private:
-	// size of table
-	unsigned int Width, Height;
-	
-	// square side size
-	float SquareSize;
+	// data
+	unsigned int Width, Height;					// size of table
+	unsigned int WindowWidth, WindowHeight;		// size of window
+	float SquareSize;							// square side size
+	int NrRows, NrColumns;						// number of rows and colums of our table
+	Texture2D Texture;							// table texture 
+	glm::vec2 position;							// where to draw the texture of the table (top-right coordonates)
 
-	// number of rows and colums of our table
-	int NrRows;
-	int NrColumns;
-
-	// selected square : begin from 0, 0 -> NrRows - 1, NrColumns - 1
-	int SquareY;
-	int SquareX;
+	// selected square : begins from 0, 0 -> NrRows - 1, NrColumns - 1
+	int SquareX, SquareY;
 
 	// render data
-	GLuint RowVAO, ColumnVAO, QuadVAO;
+	GLuint RowVAO, ColumnVAO, QuadVAO;		// Vertex Array Objects
+	GLuint FBO;								// Framebuffer
 
-	// Draw table to Texture
-	void Draw();
-	Texture2D Texture;
-
-	void DrawOutline();
-
-	// Framebuffer and quad VAO
-	GLuint FBO, VAO;
+	// draw functions
+	void Draw();			// draw table to FBO/Texture
+	void DrawOutline();		// draw outline for the selected square
+	void DrawStart();		// draw start point
+	void DrawFinish();		// draw finish point
 
 	// initialize render data
 	void InitRenderData();
