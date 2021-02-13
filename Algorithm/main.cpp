@@ -9,7 +9,8 @@
 // callback
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
-void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+void mouse_cursor_callback(GLFWwindow* window, double xpos, double ypos);
+void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
 
 // window settings
 const unsigned int SCR_WIDTH = 1600;
@@ -42,7 +43,8 @@ int main()
 	glfwMakeContextCurrent(window);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 	glfwSetKeyCallback(window, key_callback);
-	glfwSetCursorPosCallback(window, mouse_callback);
+	glfwSetCursorPosCallback(window, mouse_cursor_callback);
+	glfwSetMouseButtonCallback(window, mouse_button_callback);
 
 	// glad: load all OpenGL function pointers
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -102,8 +104,15 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		glfwSetWindowShouldClose(window, true);
 }
 
-void mouse_callback(GLFWwindow* window, double xpos, double ypos)
+void mouse_cursor_callback(GLFWwindow* window, double xpos, double ypos)
 {
 	app->SetMousePosition(xpos, ypos);
 }
 
+void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
+{
+	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
+		app->SetLeftMouse(true);
+	else
+		app->SetLeftMouse(false);
+}

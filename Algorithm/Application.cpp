@@ -61,8 +61,11 @@ void Application::ProcessInput(float deltaTime)
 
 void Application::SetMousePosition(double xpos, double ypos)
 {
-	MouseX = xpos;
-	MouseY = ypos;
 	TableMatrix->ProcessInput(xpos, ypos);
+}
+
+void Application::SetLeftMouse(bool press)
+{
+	TableMatrix->SetLeftMouse(press);
 }
 

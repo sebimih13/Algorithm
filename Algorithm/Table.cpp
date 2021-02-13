@@ -4,8 +4,11 @@
 #include <iostream>
 
 Table::Table(unsigned int width, unsigned int height, float squareSize, unsigned int windowWidth, unsigned int windowHeight)
-	: Width(width), Height(height), SquareSize(squareSize), SquareY(-1), SquareX(-1), NrRows(-1), NrColumns(-1), White(1.0f, 1.0f, 1.0f), Blue(0.0f, 0.0f, 1.0f),
-	  WindowWidth(windowWidth), WindowHeight(windowHeight)
+	: Width(width), Height(height), SquareSize(squareSize), SquareY(-1), SquareX(-1), NrRows(-1), NrColumns(-1), 
+	  White(1.0f, 1.0f, 1.0f), Blue(0.0f, 0.0f, 1.0f), Yellow(1.0f, 1.0f, 0.0f),
+	  StartPointX(0), StartPointY(0),
+	  WindowWidth(windowWidth), WindowHeight(windowHeight),
+	  LeftMousePressed(false), MoveStartPoint(false)
 {
 	for (float y = 0.0f; y <= (float)Height; y += SquareSize)
 		NrRows++;
@@ -31,7 +34,7 @@ Table::Table(unsigned int width, unsigned int height, float squareSize, unsigned
 void Table::InitRenderData()
 {
 	// initialize row and column VAO
-	float Vertices[] = {
+	float LineVertices[] = {
 		0.0f, 0.0f,			// row left
 		1.0f, 0.0f,			// row right
 
@@ -39,13 +42,13 @@ void Table::InitRenderData()
 		0.0f, 1.0f			// column down
 	};
 
-	GLuint VBO;
+	GLuint LineVBO;
 	glGenVertexArrays(1, &RowVAO);
 	glGenVertexArrays(1, &ColumnVAO);
-	glGenBuffers(1, &VBO);
+	glGenBuffers(1, &LineVBO);
 
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertices), Vertices, GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, LineVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(LineVertices), LineVertices, GL_STATIC_DRAW);
 
 	glBindVertexArray(RowVAO);
 
@@ -80,6 +83,29 @@ void Table::InitRenderData()
 
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+
+	// initialize start point VAO
+	float StartPointVertices[] = {
+		0.0f, 0.0f,
+		1.0f, 0.5f,
+
+		1.0f, 0.5f,
+		0.0f, 1.0f
+	};
+
+	GLuint StartPointVBO;
+	glGenVertexArrays(1, &StartVAO);
+	glGenBuffers(1, &StartPointVBO);
+
+	glBindBuffer(GL_ARRAY_BUFFER, StartPointVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(StartPointVertices), StartPointVertices, GL_STATIC_DRAW);
+
+	glBindVertexArray(StartVAO);
+
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
@@ -139,6 +165,8 @@ void Table::Draw()
 		model = glm::scale(model, glm::vec3(0.0f, (float)Height, 1.0f));
 		ResourceManager::GetShader("line").SetMatrix4f("model", model);
 
+		// todo : use the same VAO and rotate the model
+
 		glBindVertexArray(ColumnVAO);
 		glDrawArrays(GL_LINES, 0, 2);
 	}
@@ -149,13 +177,14 @@ void Table::Draw()
 	glBindVertexArray(0);
 	glLineWidth(1.0f);
 
+	DrawStart();
+
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 void Table::ProcessInput(double xpos, double ypos)
 {
-	// transform to texture coordinates
-
+	// transform mouse position to texture coordinates
 	xpos -= position.x;
 	ypos -= position.y;
 
@@ -168,9 +197,32 @@ void Table::ProcessInput(double xpos, double ypos)
 		SquareX = -1;
 		SquareY = -1;
 	} 
-
+	 
 	// todo
 	std::cout << "Square : " << SquareX << ' ' << SquareY << '\n';
+	std::cout << "StartPoint : " << StartPointX << ' ' << StartPointY << '\n';
+
+	if (MoveStartPoint)
+	{
+		if (SquareX != -1)	// if it is inside in table
+		{
+			StartPointX = SquareX;
+			StartPointY = SquareY;
+		}
+		else
+		{
+			MoveStartPoint = false;
+		}
+	}
+
+	if (StartPointX == SquareX && StartPointY == SquareY && LeftMousePressed) 
+	{
+		MoveStartPoint = true;
+	}
+	else // not holding anymore
+	{
+		MoveStartPoint = false;
+	}
 }
 
 void Table::DrawOutline()
@@ -179,14 +231,14 @@ void Table::DrawOutline()
 
 	glm::mat4 model = glm::mat4(1.0f);
 
-	float startX = (float)SquareX * SquareSize;
-	float startY = (float)SquareY * SquareSize;
+	float StartX = (float)SquareY * SquareSize;
+	float StartY = (float)SquareX * SquareSize;
 
 	// draw rows
-	for (float y = startX; y <= startX + SquareSize; y += SquareSize)
+	for (float y = StartY; y <= StartY + SquareSize; y += SquareSize)
 	{
 		model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(startY, y, 0.0f));
+		model = glm::translate(model, glm::vec3(StartX, y, 0.0f));
 		model = glm::scale(model, glm::vec3((float)SquareSize, 0.0f, 1.0f));
 		ResourceManager::GetShader("line").SetMatrix4f("model", model);
 
@@ -195,30 +247,57 @@ void Table::DrawOutline()
 	}
 
 	// draw columns
-	for (float x = startY; x <= startY + SquareSize; x += SquareSize)
+	for (float x = StartX; x <= StartX + SquareSize; x += SquareSize)
 	{
 		model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(x, startX, 0.0f));
+		model = glm::translate(model, glm::vec3(x, StartY, 0.0f));
 		model = glm::scale(model, glm::vec3(0.0f, (float)SquareSize, 1.0f));
 		ResourceManager::GetShader("line").SetMatrix4f("model", model);
+
+		// todo : use the same VAO and rotate the model
 
 		glBindVertexArray(ColumnVAO);
 		glDrawArrays(GL_LINES, 0, 2);
 	}
 }
 
-void Table::SetSpritePosition(glm::vec2 pos)
-{
-	position = pos; 
-}
-
 void Table::DrawStart()
 {
+	glLineWidth(5.0f);
 
+	float StartX = (float)StartPointY * SquareSize + 2.0f;
+	float StartY = (float)StartPointX * SquareSize + 2.0f;
+
+	ResourceManager::GetShader("line").SetVector3f("color", Yellow);
+	glm::mat4 model = glm::mat4(1.0f);
+	model = glm::translate(model, glm::vec3(StartX, StartY, 0.0f));
+	model = glm::scale(model, glm::vec3(25.0f, 25.0f, 0.0f));
+	ResourceManager::GetShader("line").SetMatrix4f("model", model);
+
+	glBindVertexArray(StartVAO);
+	glDrawArrays(GL_LINES, 0, 4);
+	glBindVertexArray(0);
+
+	glLineWidth(1.0f);
 }
 
 void Table::DrawFinish()
 {
 
+}
+
+void Table::SetSpritePosition(glm::vec2 pos)
+{
+	position = pos;
+}
+
+void Table::SetLeftMouse(bool press)
+{
+	LeftMousePressed = press;
+
+	if (LeftMousePressed)
+		std::cout << "LEFT CLICK\n";
+	else
+		std::cout << "LEFT RELEASED\n";
 }
 

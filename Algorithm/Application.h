@@ -20,15 +20,13 @@ public:
 	void Draw();
 	void ProcessInput(float deltaTime);
 	void SetMousePosition(double xpos, double ypos);
+	void SetLeftMouse(bool press);
 
 private:
 	// state
 	unsigned int Width, Height;
 	unsigned int TableWidth, TableHeight;
 	float SquareSize;
-
-	// mouse position
-	double MouseX, MouseY;
 
 	// components
 	Table* TableMatrix;

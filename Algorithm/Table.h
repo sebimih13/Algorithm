@@ -19,6 +19,7 @@ public:
 
 	// process mouse input
 	void ProcessInput(double xpos, double ypos);
+	void SetLeftMouse(bool press);
 
 	// set the position of the textures top-right corner
 	void SetSpritePosition(glm::vec2 pos);
@@ -31,19 +32,25 @@ private:
 	int NrRows, NrColumns;						// number of rows and colums of our table
 	Texture2D Texture;							// table texture 
 	glm::vec2 position;							// where to draw the texture of the table (top-right coordonates)
+	bool LeftMousePressed;						// if the left mouse button is pressed
 
 	// selected square : begins from 0, 0 -> NrRows - 1, NrColumns - 1
 	int SquareX, SquareY;
 
+	// position for the start point
+	int StartPointX, StartPointY;
+	bool MoveStartPoint;
+
 	// render data
 	GLuint RowVAO, ColumnVAO, QuadVAO;		// Vertex Array Objects
+	GLuint StartVAO;
 	GLuint FBO;								// Framebuffer
 
 	// draw functions
-	void Draw();			// draw table to FBO/Texture
-	void DrawOutline();		// draw outline for the selected square
-	void DrawStart();		// draw start point
-	void DrawFinish();		// draw finish point
+	void Draw();							// draw table to FBO/Texture
+	void DrawOutline();						// draw outline for the selected square
+	void DrawStart();						// draw start point
+	void DrawFinish();						// draw finish point
 
 	// initialize render data
 	void InitRenderData();
@@ -51,6 +58,7 @@ private:
 	// colors
 	glm::vec3 White;
 	glm::vec3 Blue;
+	glm::vec3 Yellow;
 };
 
 #endif
