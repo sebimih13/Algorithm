@@ -37,20 +37,27 @@ private:
 	// selected square : begins from 0, 0 -> NrRows - 1, NrColumns - 1
 	int SquareX, SquareY;
 
-	// position for the start point
+	// data for the starting point
 	int StartPointX, StartPointY;
 	bool MoveStartPoint;
 
+	// data for the finishing point
+	int FinishPointX, FinishPointY;
+	bool MoveFinishPoint;
+
 	// render data
-	GLuint RowVAO, ColumnVAO, QuadVAO;		// Vertex Array Objects
+	GLuint RowVAO, ColumnVAO, QuadVAO, CircleVAO;		// Vertex Array Objects
 	GLuint StartVAO;
-	GLuint FBO;								// Framebuffer
+	GLuint FBO;											// Framebuffer
 
 	// draw functions
-	void Draw();							// draw table to FBO/Texture
-	void DrawOutline();						// draw outline for the selected square
-	void DrawStart();						// draw start point
-	void DrawFinish();						// draw finish point
+	void Draw();					// draw table to FBO/Texture
+	void DrawOutline();				// draw outline for the selected square
+	void DrawStart();				// draw start point
+	void DrawFinish();				// draw finish point
+
+	const int TriangleAmount;														// nr of triangles used to draw circle
+	void DrawCircle(float StartX, float StartY, glm::vec2 scale, glm::vec3 color);	// draw a circle with top-left corner (x, y)
 
 	// initialize render data
 	void InitRenderData();
@@ -59,6 +66,8 @@ private:
 	glm::vec3 White;
 	glm::vec3 Blue;
 	glm::vec3 Yellow;
+	glm::vec3 Red;
+	glm::vec3 Purple;
 };
 
 #endif

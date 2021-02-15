@@ -2,13 +2,16 @@
 #include "ResourceManager.h"
 
 #include <iostream>
+#include <vector>
 
 Table::Table(unsigned int width, unsigned int height, float squareSize, unsigned int windowWidth, unsigned int windowHeight)
 	: Width(width), Height(height), SquareSize(squareSize), SquareY(-1), SquareX(-1), NrRows(-1), NrColumns(-1), 
-	  White(1.0f, 1.0f, 1.0f), Blue(0.0f, 0.0f, 1.0f), Yellow(1.0f, 1.0f, 0.0f),
-	  StartPointX(0), StartPointY(0),
+	  White(1.0f, 1.0f, 1.0f), Blue(0.0f, 0.0f, 1.0f), Yellow(1.0f, 1.0f, 0.0f), Red(1.0f, 0.0f, 0.0f), Purple(0.5f, 0.1f, 0.8f),
+	  StartPointX(0), StartPointY(0), MoveStartPoint(false),
+	  FinishPointX(0), FinishPointY(1), MoveFinishPoint(false),
 	  WindowWidth(windowWidth), WindowHeight(windowHeight),
-	  LeftMousePressed(false), MoveStartPoint(false)
+	  LeftMousePressed(false),
+	  TriangleAmount(100)
 {
 	for (float y = 0.0f; y <= (float)Height; y += SquareSize)
 		NrRows++;
@@ -105,10 +108,37 @@ void Table::InitRenderData()
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
 
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	// initialize circle VAO
+	float x, y, radius;
+	y = x = radius = 1.0f;
+
+	const float PI = 3.14159265358979323846f;
+	float twicePi = 2.0f * PI;
+
+	std::vector<float> CircleVertices;
+	CircleVertices.push_back(x);
+	CircleVertices.push_back(y);
+
+	for (int i = 0; i <= TriangleAmount; i++)
+	{
+		CircleVertices.push_back(x + (radius * cos(i * twicePi / TriangleAmount)));
+		CircleVertices.push_back(y + (radius * sin(i * twicePi / TriangleAmount)));
+	}
+
+	GLuint CircleVBO;
+	glGenVertexArrays(1, &CircleVAO);
+	glGenBuffers(1, &CircleVBO);
+
+	glBindBuffer(GL_ARRAY_BUFFER, CircleVBO);
+	glBufferData(GL_ARRAY_BUFFER, CircleVertices.size() * sizeof(float), &CircleVertices[0], GL_STATIC_DRAW);
+
+	glBindVertexArray(CircleVAO);
+
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
+	glBindVertexArray(0); 
 }
 
 void Table::DrawSprite()
@@ -179,6 +209,8 @@ void Table::Draw()
 
 	DrawStart();
 
+	DrawFinish();
+
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
@@ -202,9 +234,11 @@ void Table::ProcessInput(double xpos, double ypos)
 	std::cout << "Square : " << SquareX << ' ' << SquareY << '\n';
 	std::cout << "StartPoint : " << StartPointX << ' ' << StartPointY << '\n';
 
+	// move starting point
 	if (MoveStartPoint)
 	{
-		if (SquareX != -1)	// if it is inside in table
+		// if it is inside in table ans it is not overlapping with finishing point
+		if (SquareX != -1 && (SquareX != FinishPointX || SquareY != FinishPointY))
 		{
 			StartPointX = SquareX;
 			StartPointY = SquareY;
@@ -212,21 +246,54 @@ void Table::ProcessInput(double xpos, double ypos)
 		else
 		{
 			MoveStartPoint = false;
+			LeftMousePressed = false;
 		}
 	}
 
-	if (StartPointX == SquareX && StartPointY == SquareY && LeftMousePressed) 
+	// move finishing point
+	if (MoveFinishPoint)
 	{
-		MoveStartPoint = true;
+		// if it is inside in table ans it is not overlapping with starting point
+		if (SquareX != -1 && (SquareX != StartPointX || SquareY != StartPointY))
+		{
+			FinishPointX = SquareX;
+			FinishPointY = SquareY;
+		}
+		else
+		{
+			MoveFinishPoint = false;
+			LeftMousePressed = false;
+		}
+	}
+
+	// check mouse left button
+	if (LeftMousePressed)
+	{
+		if (StartPointX == SquareX && StartPointY == SquareY)
+		{
+			MoveStartPoint = true;
+		}
+		else if (FinishPointX == SquareX && FinishPointY == SquareY)
+		{
+			MoveFinishPoint = true;
+		}
+		else // not holding anymore
+		{
+			LeftMousePressed = false;
+			MoveStartPoint = false;
+			MoveFinishPoint = false;
+		}
 	}
 	else // not holding anymore
 	{
 		MoveStartPoint = false;
+		MoveFinishPoint = false;
 	}
 }
 
 void Table::DrawOutline()
 {
+	ResourceManager::GetShader("line").Use();
 	ResourceManager::GetShader("line").SetVector3f("color", Blue);
 
 	glm::mat4 model = glm::mat4(1.0f);
@@ -268,6 +335,7 @@ void Table::DrawStart()
 	float StartX = (float)StartPointY * SquareSize + 2.0f;
 	float StartY = (float)StartPointX * SquareSize + 2.0f;
 
+	ResourceManager::GetShader("line").Use();
 	ResourceManager::GetShader("line").SetVector3f("color", Yellow);
 	glm::mat4 model = glm::mat4(1.0f);
 	model = glm::translate(model, glm::vec3(StartX, StartY, 0.0f));
@@ -283,7 +351,18 @@ void Table::DrawStart()
 
 void Table::DrawFinish()
 {
-
+	float StartX = (float)FinishPointY * SquareSize;
+	float StartY = (float)FinishPointX * SquareSize;
+	glm::vec2 scale = glm::vec2(15.0f, 15.0f);
+	float offset = 4.0f;
+	for (int i = 0; i < 3; i++)
+	{
+		StartX += offset;
+		StartY += offset;
+		scale.x -= offset;
+		scale.y -= offset;
+		DrawCircle(StartX, StartY, scale, i == 1 ? White : Purple);
+	}
 }
 
 void Table::SetSpritePosition(glm::vec2 pos)
@@ -299,5 +378,19 @@ void Table::SetLeftMouse(bool press)
 		std::cout << "LEFT CLICK\n";
 	else
 		std::cout << "LEFT RELEASED\n";
+}
+
+void Table::DrawCircle(float StartX, float StartY, glm::vec2 scale, glm::vec3 color)
+{
+	ResourceManager::GetShader("line").Use();
+	ResourceManager::GetShader("line").SetVector3f("color", color);
+	glm::mat4 model = glm::mat4(1.0f);
+	model = glm::translate(model, glm::vec3(StartX, StartY, 0.0f));
+	model = glm::scale(model, glm::vec3(scale, 0.0f));
+	ResourceManager::GetShader("line").SetMatrix4f("model", model);
+
+	glBindVertexArray(CircleVAO);
+	glDrawArrays(GL_TRIANGLE_FAN, 0, TriangleAmount + 2);
+	glBindVertexArray(0);
 }
 
