@@ -46,12 +46,12 @@ void Application::Init()
 
 void Application::Update(float deltaTime)
 {
-
+	TableMatrix->Update(deltaTime);
 }
 
-void Application::Draw()
+void Application::Draw(float deltaTime)
 {
-	TableMatrix->DrawSprite();
+	TableMatrix->DrawSprite(deltaTime);
 }
 
 void Application::ProcessInput(float deltaTime)

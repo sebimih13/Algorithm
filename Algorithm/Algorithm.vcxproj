@@ -84,6 +84,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AlgorithmSolver.cpp" />
+    <ClCompile Include="Animation.cpp" />
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="main.cpp" />
@@ -99,6 +101,8 @@
     <None Include="shaders\sprite.vert" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AlgorithmSolver.h" />
+    <ClInclude Include="Animation.h" />
     <ClInclude Include="Application.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="shader.h" />

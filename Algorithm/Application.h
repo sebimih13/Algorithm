@@ -17,10 +17,15 @@ public:
 	// game loop
 	void Init();
 	void Update(float deltaTime);
-	void Draw();
+	void Draw(float deltaTime);
 	void ProcessInput(float deltaTime);
 	void SetMousePosition(double xpos, double ypos);
 	void SetLeftMouse(bool press);
+
+	// todo
+	// components
+	Table* TableMatrix;
+
 
 private:
 	// state
@@ -29,7 +34,7 @@ private:
 	float SquareSize;
 
 	// components
-	Table* TableMatrix;
+	// Table* TableMatrix;
 };
 
 #endif

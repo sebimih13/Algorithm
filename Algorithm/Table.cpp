@@ -11,13 +11,20 @@ Table::Table(unsigned int width, unsigned int height, float squareSize, unsigned
 	  FinishPointX(0), FinishPointY(1), MoveFinishPoint(false),
 	  WindowWidth(windowWidth), WindowHeight(windowHeight),
 	  LeftMousePressed(false),
-	  TriangleAmount(100)
+	  TriangleAmount(100), AnimationCooldown(0.2f), LastAnimation(AnimationCooldown)
 {
+	// nrRows and nrColumns
 	for (float y = 0.0f; y <= (float)Height; y += SquareSize)
 		NrRows++;
 
 	for (float x = 0.0f; x <= (float)Width; x += SquareSize)
 		NrColumns++;
+
+	// initialize algorithm solver
+	Solver = new AlgorithmSolver(NrRows, NrColumns, { StartPointX, StartPointY }, { FinishPointX, FinishPointY });
+
+	// initialize animation manager
+	Animation = new AnimationManager(SquareSize);
 
 	// initialize FBO
 	glGenFramebuffers(1, &FBO);
@@ -141,10 +148,10 @@ void Table::InitRenderData()
 	glBindVertexArray(0); 
 }
 
-void Table::DrawSprite()
+void Table::DrawSprite(float deltaTime)
 {
 	glViewport(0, 0, Width, Height);
-	Draw();
+	Draw(deltaTime);
 	glViewport(0, 0, WindowWidth, WindowHeight);
 
 	ResourceManager::GetShader("sprite").Use();
@@ -163,7 +170,19 @@ void Table::DrawSprite()
 	glBindVertexArray(0);
 }
 
-void Table::Draw()
+void Table::Update(float deltaTime)
+{
+	// todo : start animation
+	LastAnimation += deltaTime;
+	if (LastAnimation >= AnimationCooldown && !Solver->Path.empty())
+	{
+		LastAnimation = 0.0f;
+		Animation->AddSquare(Solver->Path.back());
+		Solver->Path.pop_back();
+	}
+}
+
+void Table::Draw(float deltaTime)
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, FBO);
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);		// todo : change background color
@@ -201,6 +220,8 @@ void Table::Draw()
 		glDrawArrays(GL_LINES, 0, 2);
 	}
 
+	Animation->Draw(deltaTime);
+
 	if (SquareX != -1 && SquareY != -1)
 		DrawOutline();
 
@@ -232,7 +253,8 @@ void Table::ProcessInput(double xpos, double ypos)
 	 
 	// todo
 	std::cout << "Square : " << SquareX << ' ' << SquareY << '\n';
-	std::cout << "StartPoint : " << StartPointX << ' ' << StartPointY << '\n';
+	std::cout << "Start Point : " << StartPointX << ' ' << StartPointY << '\n';
+	std::cout << "Finish Point : " << FinishPointX << ' ' << FinishPointY << '\n';
 
 	// move starting point
 	if (MoveStartPoint)
@@ -392,5 +414,14 @@ void Table::DrawCircle(float StartX, float StartY, glm::vec2 scale, glm::vec3 co
 	glBindVertexArray(CircleVAO);
 	glDrawArrays(GL_TRIANGLE_FAN, 0, TriangleAmount + 2);
 	glBindVertexArray(0);
+}
+
+void Table::StartAlgorithm()
+{
+	Animation->Reset();
+	Solver->Reset();
+	Solver->SetStartingPosition({ StartPointX, StartPointY });
+	Solver->SetFinishingPosition({ FinishPointX, FinishPointY });
+	Solver->FindPath(Algorithm::BFS);
 }
 

@@ -2,11 +2,12 @@
 #define TABLE_H
 
 #include <glad/glad.h>
-#include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "Texture.h"
+#include "AlgorithmSolver.h"
+#include "Animation.h"
 
 class Table
 {
@@ -15,7 +16,7 @@ public:
 	Table(unsigned int width, unsigned int height, float squareSize, unsigned int windowWidth, unsigned int windowHeight);
 
 	// draw table as a texture
-	void DrawSprite();
+	void DrawSprite(float deltaTime);
 
 	// process mouse input
 	void ProcessInput(double xpos, double ypos);
@@ -23,6 +24,13 @@ public:
 
 	// set the position of the textures top-right corner
 	void SetSpritePosition(glm::vec2 pos);
+
+	// solve
+	void StartAlgorithm();
+
+	// update animations
+	void Update(float deltaTime);
+	float AnimationCooldown, LastAnimation;
 
 private:
 	// data
@@ -51,10 +59,10 @@ private:
 	GLuint FBO;											// Framebuffer
 
 	// draw functions
-	void Draw();					// draw table to FBO/Texture
-	void DrawOutline();				// draw outline for the selected square
-	void DrawStart();				// draw start point
-	void DrawFinish();				// draw finish point
+	void Draw(float deltaTime);				// draw table to FBO/Texture
+	void DrawOutline();						// draw outline for the selected square
+	void DrawStart();						// draw start point
+	void DrawFinish();						// draw finish point
 
 	const int TriangleAmount;														// nr of triangles used to draw circle
 	void DrawCircle(float StartX, float StartY, glm::vec2 scale, glm::vec3 color);	// draw a circle with top-left corner (x, y)
@@ -68,6 +76,12 @@ private:
 	glm::vec3 Yellow;
 	glm::vec3 Red;
 	glm::vec3 Purple;
+
+	// algorithm solver
+	AlgorithmSolver* Solver;
+
+	// animation manager
+	AnimationManager* Animation;
 };
 
 #endif

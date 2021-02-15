@@ -78,7 +78,7 @@ int main()
 		// rendering commands here
 		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
-		app->Draw();
+		app->Draw(deltaTime);
 
 
 		// check and call events and swap the buffers
@@ -100,8 +100,12 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
 {
-	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
+
+	// todo
+	if (key == GLFW_KEY_ENTER && action == GLFW_PRESS)
+		app->TableMatrix->StartAlgorithm();
 }
 
 void mouse_cursor_callback(GLFWwindow* window, double xpos, double ypos)
