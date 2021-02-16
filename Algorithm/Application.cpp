@@ -69,3 +69,8 @@ void Application::SetLeftMouse(bool press)
 	TableMatrix->SetLeftMouse(press);
 }
 
+void Application::SetRightMouse(bool press)
+{
+	TableMatrix->SetRightMouse(press);
+}
+

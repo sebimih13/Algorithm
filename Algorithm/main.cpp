@@ -23,6 +23,8 @@ float lastFrame = 0.0f;		// time of last frame
 // application
 Application* app;
 
+double LastMouseX = 0.0f, LastMouseY = 0.0f;
+
 int main()
 {
 	// glfw: initialize and configure
@@ -69,6 +71,7 @@ int main()
 
 		// input
 		app->ProcessInput(deltaTime);
+		app->SetMousePosition(LastMouseX, LastMouseY);
 
 
 		// update
@@ -106,11 +109,16 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	// todo
 	if (key == GLFW_KEY_ENTER && action == GLFW_PRESS)
 		app->TableMatrix->StartAlgorithm();
+
+	// todo
+	if (key == GLFW_KEY_BACKSPACE && action == GLFW_PRESS)
+		app->TableMatrix->Clear();
 }
 
 void mouse_cursor_callback(GLFWwindow* window, double xpos, double ypos)
 {
-	app->SetMousePosition(xpos, ypos);
+	LastMouseX = xpos;
+	LastMouseY = ypos;
 }
 
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
@@ -119,4 +127,10 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 		app->SetLeftMouse(true);
 	else
 		app->SetLeftMouse(false);
+
+	if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
+		app->SetRightMouse(true);
+	else
+		app->SetRightMouse(false);
 }
+

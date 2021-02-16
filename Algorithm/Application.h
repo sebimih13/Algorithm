@@ -21,6 +21,7 @@ public:
 	void ProcessInput(float deltaTime);
 	void SetMousePosition(double xpos, double ypos);
 	void SetLeftMouse(bool press);
+	void SetRightMouse(bool press);
 
 	// todo
 	// components

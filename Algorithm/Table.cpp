@@ -10,9 +10,11 @@ Table::Table(unsigned int width, unsigned int height, float squareSize, unsigned
 	  StartPointX(0), StartPointY(0), MoveStartPoint(false),
 	  FinishPointX(0), FinishPointY(1), MoveFinishPoint(false),
 	  WindowWidth(windowWidth), WindowHeight(windowHeight),
-	  LeftMousePressed(false),
+	  LeftMousePressed(false), RightMousePressed(false), BlockLastFrame(false),
 	  TriangleAmount(100), AnimationCooldown(0.2f), LastAnimation(AnimationCooldown)
 {
+	State = TableState::TABLE_DRAW;
+
 	// nrRows and nrColumns
 	for (float y = 0.0f; y <= (float)Height; y += SquareSize)
 		NrRows++;
@@ -172,8 +174,7 @@ void Table::DrawSprite(float deltaTime)
 
 void Table::Update(float deltaTime)
 {
-	// todo : start animation
-	LastAnimation += deltaTime;
+	LastAnimation = std::min(AnimationCooldown, LastAnimation + deltaTime);
 	if (LastAnimation >= AnimationCooldown && !Solver->Path.empty())
 	{
 		LastAnimation = 0.0f;
@@ -249,67 +250,91 @@ void Table::ProcessInput(double xpos, double ypos)
 	{
 		SquareX = -1;
 		SquareY = -1;
-	} 
-	 
-	// todo
-	std::cout << "Square : " << SquareX << ' ' << SquareY << '\n';
-	std::cout << "Start Point : " << StartPointX << ' ' << StartPointY << '\n';
-	std::cout << "Finish Point : " << FinishPointX << ' ' << FinishPointY << '\n';
+	}
 
-	// move starting point
-	if (MoveStartPoint)
+	if (State == TableState::TABLE_DRAW)
 	{
-		// if it is inside in table ans it is not overlapping with finishing point
-		if (SquareX != -1 && (SquareX != FinishPointX || SquareY != FinishPointY))
+		if (MoveStartPoint)	// move starting point
 		{
-			StartPointX = SquareX;
-			StartPointY = SquareY;
+			// todo : change logic
+
+			// if it is inside in table ans it is not overlapping with finishing point or a block
+			if (SquareX != -1 && (SquareX != FinishPointX || SquareY != FinishPointY) && !Solver->IsBlock({ SquareX, SquareY }))
+			{
+				StartPointX = SquareX;
+				StartPointY = SquareY;
+			}
+			else
+			{
+				MoveStartPoint = false;
+				LeftMousePressed = false;
+			}
 		}
-		else
+		else if (MoveFinishPoint)	// move finishing point
 		{
+			// todo : change logic
+
+			// if it is inside in table and it is not overlapping with starting point or a block
+			if (SquareX != -1 && (SquareX != StartPointX || SquareY != StartPointY) && !Solver->IsBlock({ SquareX, SquareY }))
+			{
+				FinishPointX = SquareX;
+				FinishPointY = SquareY;
+			}
+			else
+			{
+				MoveFinishPoint = false;
+				LeftMousePressed = false;
+			}
+		}
+
+		// check mouse left button
+		if (LeftMousePressed)
+		{
+			// if the selected block is not the starting/finishing point or already a block, make one
+			if (StartPointX == SquareX && StartPointY == SquareY)	// check if starting point is selected
+			{
+				if (BlockLastFrame)
+				{
+					LeftMousePressed = false;
+					BlockLastFrame = false;
+				}
+				else
+				{
+					MoveStartPoint = true;
+				}
+			}
+			else if (FinishPointX == SquareX && FinishPointY == SquareY)	// check if finishing point is selected
+			{
+				if (BlockLastFrame)
+				{
+					LeftMousePressed = false;
+					BlockLastFrame = false;
+				}
+				else
+				{
+					MoveFinishPoint = true;
+				}
+			}
+			else if (SquareX != -1 && !Solver->IsBlock({ SquareX, SquareY }))
+			{
+				std::cout << "ADD BLOCK << " << SquareX << ' ' << SquareY << '\n';
+				Solver->AddBlock({ SquareX, SquareY });
+				Animation->AddBlock({ SquareX, SquareY });
+				BlockLastFrame = true;
+			}
+		}
+		else // not pressing
+		{
+			// todo : if the position is correct move starting/finishing point
+			if (MoveStartPoint)
+				std::cout << "STOP : START POINT\n";
+			if (MoveFinishPoint)
+				std::cout << "STOP : FINISH POINT\n";
+
+			BlockLastFrame = false;
 			MoveStartPoint = false;
-			LeftMousePressed = false;
-		}
-	}
-
-	// move finishing point
-	if (MoveFinishPoint)
-	{
-		// if it is inside in table ans it is not overlapping with starting point
-		if (SquareX != -1 && (SquareX != StartPointX || SquareY != StartPointY))
-		{
-			FinishPointX = SquareX;
-			FinishPointY = SquareY;
-		}
-		else
-		{
-			MoveFinishPoint = false;
-			LeftMousePressed = false;
-		}
-	}
-
-	// check mouse left button
-	if (LeftMousePressed)
-	{
-		if (StartPointX == SquareX && StartPointY == SquareY)
-		{
-			MoveStartPoint = true;
-		}
-		else if (FinishPointX == SquareX && FinishPointY == SquareY)
-		{
-			MoveFinishPoint = true;
-		}
-		else // not holding anymore
-		{
-			LeftMousePressed = false;
-			MoveStartPoint = false;
 			MoveFinishPoint = false;
 		}
-	}
-	else // not holding anymore
-	{
-		MoveStartPoint = false;
-		MoveFinishPoint = false;
 	}
 }
 
@@ -395,11 +420,11 @@ void Table::SetSpritePosition(glm::vec2 pos)
 void Table::SetLeftMouse(bool press)
 {
 	LeftMousePressed = press;
+}
 
-	if (LeftMousePressed)
-		std::cout << "LEFT CLICK\n";
-	else
-		std::cout << "LEFT RELEASED\n";
+void Table::SetRightMouse(bool press)
+{
+	RightMousePressed = press;
 }
 
 void Table::DrawCircle(float StartX, float StartY, glm::vec2 scale, glm::vec3 color)
@@ -418,10 +443,19 @@ void Table::DrawCircle(float StartX, float StartY, glm::vec2 scale, glm::vec3 co
 
 void Table::StartAlgorithm()
 {
+	if (State == TableState::TABLE_DRAW)
+	{
+		State = TableState::TABLE_VISUALIZE;
+		Solver->SetStartingPosition({ StartPointX, StartPointY });
+		Solver->SetFinishingPosition({ FinishPointX, FinishPointY });
+		Solver->FindPath(Algorithm::BFS);
+	}
+}
+
+void Table::Clear()
+{
+	State = TableState::TABLE_DRAW;
 	Animation->Reset();
 	Solver->Reset();
-	Solver->SetStartingPosition({ StartPointX, StartPointY });
-	Solver->SetFinishingPosition({ FinishPointX, FinishPointY });
-	Solver->FindPath(Algorithm::BFS);
 }
 

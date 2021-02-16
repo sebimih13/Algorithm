@@ -14,6 +14,7 @@ AlgorithmSolver::AlgorithmSolver(unsigned int nrRow, unsigned int nrColumns, coo
 	this->Finish = Finish;
 
 	Visited.resize(nrRow, std::vector<bool>(nrColumns, false));
+	Block.resize(nrRow, std::vector<bool>(nrColumns, false));
 }
 
 bool AlgorithmSolver::IsInMatrix(coordinates p)
@@ -27,7 +28,10 @@ void AlgorithmSolver::Reset()
 
 	for (unsigned int i = 0; i < nrRows; i++)
 		for (unsigned int j = 0; j < nrColumns; j++)
+		{
 			Visited[i][j] = false;
+			Block[i][j] = false;
+		}
 }
 
 void AlgorithmSolver::SetStartingPosition(coordinates pos)
@@ -40,14 +44,18 @@ void AlgorithmSolver::SetFinishingPosition(coordinates pos)
 	Finish = pos;
 }
 
+void AlgorithmSolver::AddBlock(coordinates pos)
+{
+	Block[pos.X][pos.Y] = true;
+}
+
+bool AlgorithmSolver::IsBlock(coordinates pos)
+{
+	return Block[pos.X][pos.Y];
+}
+
 void AlgorithmSolver::FindPath(Algorithm algo)
 {
-	// todo
-	std::cout << "ROWS : " << nrRows << '\n';
-	std::cout << "COLUMNS : " << nrColumns << '\n';
-	std::cout << "START : " << Start.X << ' ' << Start.Y << '\n';
-	std::cout << "FINISH : " << Finish.X << ' ' << Finish.Y << '\n';
-
 	switch (algo)
 	{
 		case Algorithm::BFS: BFS(); break;
@@ -76,7 +84,7 @@ void AlgorithmSolver::BFS()
 		{
 			coordinates next = { p.X + DirX[i], p.Y + DirY[i] };
 
-			if (IsInMatrix(next) && !Visited[next.X][next.Y])
+			if (IsInMatrix(next) && !Visited[next.X][next.Y] && !Block[next.X][next.Y])
 			{
 				Visited[next.X][next.Y] = true;
 				list.push(next);

@@ -2,6 +2,7 @@
 #define ANIMATION_H
 
 #include <glad/glad.h>
+#include <glm/glm.hpp>
 
 #include <iostream>
 #include <vector>
@@ -27,6 +28,7 @@ public:
 
 	// add a new square to the list of animated squares
 	void AddSquare(coordinates sq);
+	void AddBlock(coordinates sq);
 
 	// draw
 	void Draw(float deltaTime);
@@ -37,7 +39,7 @@ public:
 
 private:
 	// store all squares that must be animated
-	std::vector<Animation> Anims;
+	std::vector<Animation> PathAnims, BlockAnims;
 	float SquareSize;
 	float Speed;
 
@@ -46,6 +48,9 @@ private:
 
 	// render data
 	GLuint SquareVAO;
+
+	// draw
+	void DrawSquare(Animation& sq, glm::vec3 color);
 };
 
 #endif

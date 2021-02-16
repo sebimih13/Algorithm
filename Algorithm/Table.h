@@ -9,11 +9,20 @@
 #include "AlgorithmSolver.h"
 #include "Animation.h"
 
+enum class TableState
+{
+	TABLE_DRAW,
+	TABLE_VISUALIZE
+};
+
 class Table
 {
 public:
 	// constructor
 	Table(unsigned int width, unsigned int height, float squareSize, unsigned int windowWidth, unsigned int windowHeight);
+
+	// table state
+	TableState State;
 
 	// draw table as a texture
 	void DrawSprite(float deltaTime);
@@ -21,6 +30,7 @@ public:
 	// process mouse input
 	void ProcessInput(double xpos, double ypos);
 	void SetLeftMouse(bool press);
+	void SetRightMouse(bool press);
 
 	// set the position of the textures top-right corner
 	void SetSpritePosition(glm::vec2 pos);
@@ -32,6 +42,9 @@ public:
 	void Update(float deltaTime);
 	float AnimationCooldown, LastAnimation;
 
+	// clear all blocks and animations
+	void Clear();
+
 private:
 	// data
 	unsigned int Width, Height;					// size of table
@@ -41,6 +54,7 @@ private:
 	Texture2D Texture;							// table texture 
 	glm::vec2 position;							// where to draw the texture of the table (top-right coordonates)
 	bool LeftMousePressed;						// if the left mouse button is pressed
+	bool RightMousePressed;						// if the right mouse button is pressed
 
 	// selected square : begins from 0, 0 -> NrRows - 1, NrColumns - 1
 	int SquareX, SquareY;
@@ -52,6 +66,9 @@ private:
 	// data for the finishing point
 	int FinishPointX, FinishPointY;
 	bool MoveFinishPoint;
+
+	// if a block was added last time
+	bool BlockLastFrame;
 
 	// render data
 	GLuint RowVAO, ColumnVAO, QuadVAO, CircleVAO;		// Vertex Array Objects
