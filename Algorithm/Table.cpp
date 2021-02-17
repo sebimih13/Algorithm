@@ -223,7 +223,7 @@ void Table::Draw(float deltaTime)
 
 	Animation->Draw(deltaTime);
 
-	if (SquareX != -1 && SquareY != -1)
+	if (IsMouseInTable())
 		DrawOutline();
 
 	glBindVertexArray(0);
@@ -266,7 +266,7 @@ void Table::ProcessInput(double xpos, double ypos)
 		}
 
 		// check mouse right button
-		if (RightMousePressed && Solver->IsBlock({ SquareX, SquareY }))
+		if (RightMousePressed && IsMouseInTable() && Solver->IsBlock({ SquareX, SquareY }))
 		{
 			Solver->DeleteBlock({ SquareX, SquareY });
 			Animation->DeleteBlock({ SquareX, SquareY });
@@ -298,7 +298,7 @@ void Table::ProcessInput(double xpos, double ypos)
 					MoveFinishPoint = true;
 				}
 			}
-			else if (SquareX != -1 && !Solver->IsBlock({ SquareX, SquareY }))
+			else if (IsMouseInTable() && !Solver->IsBlock({ SquareX, SquareY }))
 			{
 				std::cout << "ADD BLOCK << " << SquareX << ' ' << SquareY << '\n';
 				Solver->AddBlock({ SquareX, SquareY });
@@ -308,13 +308,12 @@ void Table::ProcessInput(double xpos, double ypos)
 		}
 		else // not pressing
 		{
-			// todo : if the position is correct move starting/finishing point
 			if (MoveStartPoint)
 			{
 				std::cout << "STOP : START POINT\n";
 
 				// if it is inside in table and it is not overlapping with starting point or a block
-				if (SquareX != -1 && (SquareX != FinishPointX || SquareY != FinishPointY) && !Solver->IsBlock({ SquareX, SquareY }))
+				if (IsMouseInTable() && (SquareX != FinishPointX || SquareY != FinishPointY) && !Solver->IsBlock({ SquareX, SquareY }))
 				{
 					LastStartPointX = StartPointX = SquareX;
 					LastStartPointY = StartPointY = SquareY;
@@ -330,7 +329,7 @@ void Table::ProcessInput(double xpos, double ypos)
 				std::cout << "STOP : FINISH POINT\n";
 
 				// if it is inside in table and it is not overlapping with starting point or a block
-				if (SquareX != -1 && (SquareX != StartPointX || SquareY != StartPointY) && !Solver->IsBlock({ SquareX, SquareY }))
+				if (IsMouseInTable() && (SquareX != StartPointX || SquareY != StartPointY) && !Solver->IsBlock({ SquareX, SquareY }))
 				{
 					LastFinishPointX = FinishPointX = SquareX;
 					LastFinishPointY = FinishPointY = SquareY;
@@ -468,5 +467,10 @@ void Table::Clear()
 	State = TableState::TABLE_DRAW;
 	Animation->Reset();
 	Solver->Reset();
+}
+
+bool Table::IsMouseInTable()
+{
+	return SquareX != -1;
 }
 

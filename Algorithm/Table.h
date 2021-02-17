@@ -59,6 +59,8 @@ private:
 	// selected square : begins from 0, 0 -> NrRows - 1, NrColumns - 1
 	int SquareX, SquareY;
 
+	bool IsMouseInTable();
+
 	// data for the starting point
 	int StartPointX, StartPointY;
 	int LastStartPointX, LastStartPointY;
