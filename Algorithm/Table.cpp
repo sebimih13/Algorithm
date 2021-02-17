@@ -287,8 +287,13 @@ void Table::ProcessInput(double xpos, double ypos)
 			}
 		}
 
-		// check mouse left button
-		if (LeftMousePressed)
+		// check mouse right button
+		if (RightMousePressed && Solver->IsBlock({ SquareX, SquareY }))
+		{
+			Solver->DeleteBlock({ SquareX, SquareY });
+			Animation->DeleteBlock({ SquareX, SquareY });
+		}
+		else if (LeftMousePressed) // check mouse left button
 		{
 			// if the selected block is not the starting/finishing point or already a block, make one
 			if (StartPointX == SquareX && StartPointY == SquareY)	// check if starting point is selected

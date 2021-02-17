@@ -49,6 +49,11 @@ void AlgorithmSolver::AddBlock(coordinates pos)
 	Block[pos.X][pos.Y] = true;
 }
 
+void AlgorithmSolver::DeleteBlock(coordinates pos)
+{
+	Block[pos.X][pos.Y] = false;
+}
+
 bool AlgorithmSolver::IsBlock(coordinates pos)
 {
 	return Block[pos.X][pos.Y];

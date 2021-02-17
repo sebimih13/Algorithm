@@ -24,6 +24,8 @@ public:
 	
 	void SetStartingPosition(coordinates pos);
 	void SetFinishingPosition(coordinates pos);
+
+	void DeleteBlock(coordinates pos);
 	void AddBlock(coordinates pos);
 
 	// path

@@ -82,6 +82,21 @@ void AnimationManager::AddBlock(coordinates sq)
 	BlockAnims.push_back(Animation(sq));
 }
 
+int AnimationManager::FindBlock(coordinates& sq)
+{
+	for (int index = 0; index < BlockAnims.size(); index++)
+		if (BlockAnims[index].position.X == sq.X && BlockAnims[index].position.Y == sq.Y)
+			return index;
+	return -1;
+}
+
+void AnimationManager::DeleteBlock(coordinates sq)
+{
+	int element = FindBlock(sq);
+	if (element != -1)
+		BlockAnims.erase(BlockAnims.begin() + element);
+}
+
 void AnimationManager::SetSpeed(float val)
 {
 	Speed = val;

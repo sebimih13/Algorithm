@@ -28,7 +28,11 @@ public:
 
 	// add a new square to the list of animated squares
 	void AddSquare(coordinates sq);
+
+	// blocking squares
 	void AddBlock(coordinates sq);
+	int FindBlock(coordinates& sq);
+	void DeleteBlock(coordinates sq);
 
 	// draw
 	void Draw(float deltaTime);
