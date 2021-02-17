@@ -7,8 +7,8 @@
 Table::Table(unsigned int width, unsigned int height, float squareSize, unsigned int windowWidth, unsigned int windowHeight)
 	: Width(width), Height(height), SquareSize(squareSize), SquareY(-1), SquareX(-1), NrRows(-1), NrColumns(-1), 
 	  White(1.0f, 1.0f, 1.0f), Blue(0.0f, 0.0f, 1.0f), Yellow(1.0f, 1.0f, 0.0f), Red(1.0f, 0.0f, 0.0f), Purple(0.5f, 0.1f, 0.8f),
-	  StartPointX(0), StartPointY(0), MoveStartPoint(false),
-	  FinishPointX(0), FinishPointY(1), MoveFinishPoint(false),
+	  StartPointX(0), StartPointY(0), LastStartPointX(0), LastStartPointY(0), MoveStartPoint(false),
+	  FinishPointX(0), FinishPointY(1), LastFinishPointX(0), LastFinishPointY(0), MoveFinishPoint(false),
 	  WindowWidth(windowWidth), WindowHeight(windowHeight),
 	  LeftMousePressed(false), RightMousePressed(false), BlockLastFrame(false),
 	  TriangleAmount(100), AnimationCooldown(0.2f), LastAnimation(AnimationCooldown)
@@ -256,35 +256,13 @@ void Table::ProcessInput(double xpos, double ypos)
 	{
 		if (MoveStartPoint)	// move starting point
 		{
-			// todo : change logic
-
-			// if it is inside in table ans it is not overlapping with finishing point or a block
-			if (SquareX != -1 && (SquareX != FinishPointX || SquareY != FinishPointY) && !Solver->IsBlock({ SquareX, SquareY }))
-			{
-				StartPointX = SquareX;
-				StartPointY = SquareY;
-			}
-			else
-			{
-				MoveStartPoint = false;
-				LeftMousePressed = false;
-			}
+			StartPointX = SquareX;
+			StartPointY = SquareY;
 		}
 		else if (MoveFinishPoint)	// move finishing point
 		{
-			// todo : change logic
-
-			// if it is inside in table and it is not overlapping with starting point or a block
-			if (SquareX != -1 && (SquareX != StartPointX || SquareY != StartPointY) && !Solver->IsBlock({ SquareX, SquareY }))
-			{
-				FinishPointX = SquareX;
-				FinishPointY = SquareY;
-			}
-			else
-			{
-				MoveFinishPoint = false;
-				LeftMousePressed = false;
-			}
+			FinishPointX = SquareX;
+			FinishPointY = SquareY;
 		}
 
 		// check mouse right button
@@ -332,9 +310,37 @@ void Table::ProcessInput(double xpos, double ypos)
 		{
 			// todo : if the position is correct move starting/finishing point
 			if (MoveStartPoint)
+			{
 				std::cout << "STOP : START POINT\n";
+
+				// if it is inside in table and it is not overlapping with starting point or a block
+				if (SquareX != -1 && (SquareX != FinishPointX || SquareY != FinishPointY) && !Solver->IsBlock({ SquareX, SquareY }))
+				{
+					LastStartPointX = StartPointX = SquareX;
+					LastStartPointY = StartPointY = SquareY;
+				}
+				else
+				{
+					StartPointX = LastStartPointX;
+					StartPointY = LastStartPointY;
+				}
+			}
 			if (MoveFinishPoint)
+			{
 				std::cout << "STOP : FINISH POINT\n";
+
+				// if it is inside in table and it is not overlapping with starting point or a block
+				if (SquareX != -1 && (SquareX != StartPointX || SquareY != StartPointY) && !Solver->IsBlock({ SquareX, SquareY }))
+				{
+					LastFinishPointX = FinishPointX = SquareX;
+					LastFinishPointY = FinishPointY = SquareY;
+				}
+				else
+				{
+					FinishPointX = LastFinishPointX;
+					FinishPointY = LastFinishPointY;
+				}
+			}
 
 			BlockLastFrame = false;
 			MoveStartPoint = false;

@@ -61,10 +61,12 @@ private:
 
 	// data for the starting point
 	int StartPointX, StartPointY;
+	int LastStartPointX, LastStartPointY;
 	bool MoveStartPoint;
 
 	// data for the finishing point
 	int FinishPointX, FinishPointY;
+	int LastFinishPointX, LastFinishPointY;
 	bool MoveFinishPoint;
 
 	// if a block was added last time
