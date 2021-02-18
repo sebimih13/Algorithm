@@ -29,6 +29,9 @@ public:
 	// add a new square to the list of animated squares
 	void AddSquare(coordinates sq);
 
+	// add a new square to the route list
+	void AddSquareFinalRoute(coordinates sq);
+
 	// blocking squares
 	void AddBlock(coordinates sq);
 	int FindBlock(coordinates& sq);
@@ -43,7 +46,7 @@ public:
 
 private:
 	// store all squares that must be animated
-	std::vector<Animation> PathAnims, BlockAnims;
+	std::vector<Animation> PathAnims, BlockAnims, RouteAnims;
 	float SquareSize;
 	float Speed;
 

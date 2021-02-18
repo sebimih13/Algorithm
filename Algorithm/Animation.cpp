@@ -53,6 +53,12 @@ void AnimationManager::Draw(float deltaTime)
 		sq.scale = std::min(SquareSize - 4.0f, sq.scale + Speed * deltaTime);
 		DrawSquare(sq, glm::vec3(1.0f, 0.0f, 0.0f));
 	}
+
+	for (Animation& sq : RouteAnims)
+	{
+		sq.scale = std::min(SquareSize - 4.0f, sq.scale + Speed * deltaTime);
+		DrawSquare(sq, glm::vec3(1.0f, 0.6f, 1.0f));
+	}
 }
 
 void AnimationManager::DrawSquare(Animation& sq, glm::vec3 color)
@@ -75,6 +81,11 @@ void AnimationManager::DrawSquare(Animation& sq, glm::vec3 color)
 void AnimationManager::AddSquare(coordinates sq)
 {
 	PathAnims.push_back(Animation(sq));
+}
+
+void AnimationManager::AddSquareFinalRoute(coordinates sq)
+{
+	RouteAnims.push_back(sq);
 }
 
 void AnimationManager::AddBlock(coordinates sq)
@@ -106,5 +117,6 @@ void AnimationManager::Reset()
 {
 	PathAnims.clear();
 	BlockAnims.clear();
+	RouteAnims.clear();
 }
 

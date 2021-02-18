@@ -5,6 +5,7 @@
 
 #include <iostream>
 #include <vector>
+#include <map>
 
 typedef std::pair<unsigned int, unsigned int> coordinates;
 
@@ -28,8 +29,11 @@ public:
 	void DeleteBlock(coordinates pos);
 	void AddBlock(coordinates pos);
 
-	// path
+	// the path the algorithm follows
 	std::vector<coordinates> Path;
+
+	// the fastest route to finish
+	std::vector<coordinates> Route;
 
 	void FindPath(Algorithm algo);
 
@@ -52,6 +56,9 @@ private:
 
 	// utility
 	bool IsInMatrix(coordinates p);
+
+	// the fastest route to finish represented as a tree
+	std::map<coordinates, coordinates> Tree;
 };
 
 #endif

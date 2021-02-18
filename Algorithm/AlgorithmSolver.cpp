@@ -25,6 +25,8 @@ bool AlgorithmSolver::IsInMatrix(coordinates p)
 void AlgorithmSolver::Reset()
 {
 	Path.clear();
+	Tree.clear();
+	Route.clear();
 
 	for (unsigned int i = 0; i < nrRows; i++)
 		for (unsigned int j = 0; j < nrColumns; j++)
@@ -68,6 +70,7 @@ void AlgorithmSolver::FindPath(Algorithm algo)
 	}
 
 	std::reverse(Path.begin(), Path.end());
+	std::reverse(Route.begin(), Route.end());
 }
 
 void AlgorithmSolver::BFS()
@@ -76,6 +79,8 @@ void AlgorithmSolver::BFS()
 	list.push(Start);
 	Visited[Start.X][Start.Y] = true;
 
+	Tree[Start] = { -1, -1 };		// the root of the tree
+
 	while (!list.empty())
 	{
 		coordinates p = list.front();
@@ -83,7 +88,16 @@ void AlgorithmSolver::BFS()
 		Path.push_back(p);
 
 		if (p == Finish)
+		{
+			while (Tree[Finish] != coordinates(-1, -1))
+			{
+				Route.push_back(Finish);
+				Finish = Tree[Finish];
+			}
+			Route.push_back(Finish);
+
 			return;
+		}
 
 		for (int i = 0; i < 4; i++)
 		{
@@ -91,6 +105,7 @@ void AlgorithmSolver::BFS()
 
 			if (IsInMatrix(next) && !Visited[next.X][next.Y] && !Block[next.X][next.Y])
 			{
+				Tree[next] = p;
 				Visited[next.X][next.Y] = true;
 				list.push(next);
 			}

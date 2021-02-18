@@ -175,11 +175,19 @@ void Table::DrawSprite(float deltaTime)
 void Table::Update(float deltaTime)
 {
 	LastAnimation = std::min(AnimationCooldown, LastAnimation + deltaTime);
-	if (LastAnimation >= AnimationCooldown && !Solver->Path.empty())
+	if (LastAnimation >= AnimationCooldown)
 	{
 		LastAnimation = 0.0f;
-		Animation->AddSquare(Solver->Path.back());
-		Solver->Path.pop_back();
+		if (!Solver->Path.empty())
+		{
+			Animation->AddSquare(Solver->Path.back());
+			Solver->Path.pop_back();
+		}
+		else if (!Solver->Route.empty())
+		{
+			Animation->AddSquareFinalRoute(Solver->Route.back());
+			Solver->Route.pop_back();
+		}
 	}
 }
 
@@ -459,6 +467,10 @@ void Table::StartAlgorithm()
 		Solver->SetStartingPosition({ StartPointX, StartPointY });
 		Solver->SetFinishingPosition({ FinishPointX, FinishPointY });
 		Solver->FindPath(Algorithm::BFS);
+
+		// todo : output route
+		for (auto& sq : Solver->Route)
+			std::cout << sq.first << ' ' << sq.second << '\n';
 	}
 }
 
