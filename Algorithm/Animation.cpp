@@ -108,11 +108,6 @@ void AnimationManager::DeleteBlock(coordinates sq)
 		BlockAnims.erase(BlockAnims.begin() + element);
 }
 
-void AnimationManager::SetSpeed(float val)
-{
-	Speed = val;
-}
-
 void AnimationManager::Reset()
 {
 	PathAnims.clear();

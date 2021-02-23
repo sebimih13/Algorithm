@@ -40,8 +40,6 @@ public:
 	// draw
 	void Draw(float deltaTime);
 
-	void SetSpeed(float val);
-
 	void Reset();
 
 private:

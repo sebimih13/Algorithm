@@ -8,7 +8,7 @@ Table::Table(unsigned int width, unsigned int height, float squareSize, unsigned
 	: Width(width), Height(height), SquareSize(squareSize), SquareY(-1), SquareX(-1), NrRows(-1), NrColumns(-1), 
 	  White(1.0f, 1.0f, 1.0f), Blue(0.0f, 0.0f, 1.0f), Yellow(1.0f, 1.0f, 0.0f), Red(1.0f, 0.0f, 0.0f), Purple(0.5f, 0.1f, 0.8f),
 	  StartPointX(0), StartPointY(0), LastStartPointX(0), LastStartPointY(0), MoveStartPoint(false),
-	  FinishPointX(0), FinishPointY(1), LastFinishPointX(0), LastFinishPointY(0), MoveFinishPoint(false),
+	  FinishPointX(0), FinishPointY(1), LastFinishPointX(0), LastFinishPointY(1), MoveFinishPoint(false),
 	  WindowWidth(windowWidth), WindowHeight(windowHeight),
 	  LeftMousePressed(false), RightMousePressed(false), BlockLastFrame(false),
 	  TriangleAmount(100), AnimationCooldown(0.2f), LastAnimation(AnimationCooldown)
@@ -282,7 +282,7 @@ void Table::ProcessInput(double xpos, double ypos)
 		else if (LeftMousePressed) // check mouse left button
 		{
 			// if the selected block is not the starting/finishing point or already a block, make one
-			if (StartPointX == SquareX && StartPointY == SquareY)	// check if starting point is selected
+			if (StartPointX == SquareX && StartPointY == SquareY && !MoveFinishPoint)	// check if starting point is selected
 			{
 				if (BlockLastFrame)
 				{
@@ -294,7 +294,7 @@ void Table::ProcessInput(double xpos, double ypos)
 					MoveStartPoint = true;
 				}
 			}
-			else if (FinishPointX == SquareX && FinishPointY == SquareY)	// check if finishing point is selected
+			else if (FinishPointX == SquareX && FinishPointY == SquareY && !MoveStartPoint)	// check if finishing point is selected
 			{
 				if (BlockLastFrame)
 				{
