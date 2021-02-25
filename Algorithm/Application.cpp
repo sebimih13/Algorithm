@@ -23,50 +23,64 @@ Application::~Application()
 
 void Application::Init()
 {
+	// load shaders
+	ResourceManager::LoadShader("shaders/line.vert", "shaders/line.frag", nullptr, "line");
+	ResourceManager::LoadShader("shaders/sprite.vert", "shaders/sprite.frag", nullptr, "sprite");
+
+	// configure shader
+	ProjectionTable = glm::ortho(0.0f, (float)TableWidth, (float)TableHeight, 0.0f, -1.0f, 1.0f);
+	ResourceManager::GetShader("line").Use();
+	ResourceManager::GetShader("line").SetMatrix4f("projection", ProjectionTable);
+
+	ProjectionWindow = glm::ortho(0.0f, (float)Width, (float)Height, 0.0f, -1.0f, 1.0f);
+	ResourceManager::GetShader("sprite").Use();
+	ResourceManager::GetShader("sprite").SetMatrix4f("projection", ProjectionWindow);
+	ResourceManager::GetShader("sprite").SetInteger("sprite", 0);
+
+
 	// configure table
 	TableMatrix = new Table(TableWidth, TableHeight, SquareSize, Width, Height);
 
 	unsigned int diff = (Width - TableWidth) / 2;
 	TableMatrix->SetSpritePosition(glm::vec3(diff, Height - TableHeight - diff, 0.0f));
 
-	// load shaders
-	ResourceManager::LoadShader("shaders/line.vert", "shaders/line.frag", nullptr, "line");
-	ResourceManager::LoadShader("shaders/sprite.vert", "shaders/sprite.frag", nullptr, "sprite");
-
-	// configure shader
-	glm::mat4 projection = glm::ortho(0.0f, (float)TableWidth, (float)TableHeight, 0.0f, -1.0f, 1.0f);
-	ResourceManager::GetShader("line").Use();
-	ResourceManager::GetShader("line").SetMatrix4f("projection", projection);
-
-	projection = glm::ortho(0.0f, (float)Width, (float)Height, 0.0f, -1.0f, 1.0f);
-	ResourceManager::GetShader("sprite").Use();
-	ResourceManager::GetShader("sprite").SetMatrix4f("projection", projection);
-	ResourceManager::GetShader("sprite").SetInteger("sprite", 0);
+	// butons manager
+	Buttons = new ButtonsManager(Width, Height);
 }
 
 void Application::Update(float deltaTime)
 {
 	TableMatrix->Update(deltaTime);
+	Buttons->Update(TableMatrix);
 }
 
 void Application::Draw(float deltaTime)
 {
+	ResourceManager::GetShader("line").Use();
+	ResourceManager::GetShader("line").SetMatrix4f("projection", ProjectionTable);
 	TableMatrix->DrawSprite(deltaTime);
+
+
+	ResourceManager::GetShader("line").Use();
+	ResourceManager::GetShader("line").SetMatrix4f("projection", ProjectionWindow);
+	Buttons->Render();
 }
 
 void Application::ProcessInput(float deltaTime)
 {
-	
+
 }
 
 void Application::SetMousePosition(double xpos, double ypos)
 {
 	TableMatrix->ProcessInput(xpos, ypos);
+	Buttons->ProcessInput(xpos, ypos);
 }
 
 void Application::SetLeftMouse(bool press)
 {
 	TableMatrix->SetLeftMouse(press);
+	Buttons->SetLeftMouse(press);
 }
 
 void Application::SetRightMouse(bool press)

@@ -6,6 +6,7 @@
 #include <glm/glm.hpp>
 
 #include "Table.h"
+#include "Button.h"
 
 class Application
 {
@@ -23,19 +24,18 @@ public:
 	void SetLeftMouse(bool press);
 	void SetRightMouse(bool press);
 
-	// todo
-	// components
-	Table* TableMatrix;
-
-
 private:
 	// state
 	unsigned int Width, Height;
 	unsigned int TableWidth, TableHeight;
 	float SquareSize;
 
+	glm::mat4 ProjectionTable;
+	glm::mat4 ProjectionWindow;
+
 	// components
-	// Table* TableMatrix;
+	Table* TableMatrix;
+	ButtonsManager* Buttons;
 };
 
 #endif

@@ -42,8 +42,14 @@ public:
 	void Update(float deltaTime);
 	float AnimationCooldown, LastAnimation;
 
-	// clear all blocks and animations
-	void Clear();
+	// clear table
+	void ClearBoard(bool solution);
+
+	// algorithm solver
+	AlgorithmSolver* Solver;
+
+	// animation manager
+	AnimationManager* Animation;
 
 private:
 	// data
@@ -97,12 +103,6 @@ private:
 	glm::vec3 Yellow;
 	glm::vec3 Red;
 	glm::vec3 Purple;
-
-	// algorithm solver
-	AlgorithmSolver* Solver;
-
-	// animation manager
-	AnimationManager* Animation;
 };
 
 #endif

@@ -42,12 +42,20 @@
     <ClCompile Include="Animation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Button.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TextRenderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\line.vert" />
     <None Include="shaders\line.frag" />
     <None Include="shaders\sprite.frag" />
     <None Include="shaders\sprite.vert" />
+    <None Include="shaders\text_2D.frag" />
+    <None Include="shaders\text_2D.vert" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="shader.h">
@@ -71,5 +79,20 @@
     <ClInclude Include="Animation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Button.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TextRenderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="fonts\SIL Open Font License.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="fonts\Antonio-Bold.ttf" />
+    <Font Include="fonts\Antonio-Light.ttf" />
+    <Font Include="fonts\Antonio-Regular.ttf" />
+    <Font Include="fonts\OCRAEXT.TTF" />
   </ItemGroup>
 </Project>

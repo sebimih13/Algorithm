@@ -21,10 +21,12 @@ public:
 	// constructor
 	AlgorithmSolver(unsigned int nrRow, unsigned int nrColumns, coordinates Start, coordinates Finish);
 
-	void Reset();
+	void Reset(bool solution);
 	
 	void SetStartingPosition(coordinates pos);
 	void SetFinishingPosition(coordinates pos);
+
+	void SetAlgorithm(Algorithm algo);
 
 	void DeleteBlock(coordinates pos);
 	void AddBlock(coordinates pos);
@@ -35,13 +37,14 @@ public:
 	// the fastest route to finish
 	std::vector<coordinates> Route;
 
-	void FindPath(Algorithm algo);
+	void FindPath();
 
 	// return true if the pos is a block
 	bool IsBlock(coordinates pos);
 
 private:
 	// algorithm data
+	Algorithm algorithm;
 	unsigned int nrRows, nrColumns;
 	coordinates Start, Finish;
 	std::vector<std::vector<bool>> Visited, Block;

@@ -8,6 +8,8 @@
 
 AlgorithmSolver::AlgorithmSolver(unsigned int nrRow, unsigned int nrColumns, coordinates Start, coordinates Finish)
 {
+	algorithm = Algorithm::BFS;
+
 	this->nrRows = nrRow;
 	this->nrColumns = nrColumns;
 	this->Start = Start;
@@ -22,7 +24,7 @@ bool AlgorithmSolver::IsInMatrix(coordinates p)
 	return p.X >= 0 && p.X < nrRows && p.Y >= 0 && p.Y < nrColumns;
 }
 
-void AlgorithmSolver::Reset()
+void AlgorithmSolver::Reset(bool solution)
 {
 	Path.clear();
 	Tree.clear();
@@ -32,7 +34,9 @@ void AlgorithmSolver::Reset()
 		for (unsigned int j = 0; j < nrColumns; j++)
 		{
 			Visited[i][j] = false;
-			Block[i][j] = false;
+
+			if (!solution)
+				Block[i][j] = false;
 		}
 }
 
@@ -61,9 +65,14 @@ bool AlgorithmSolver::IsBlock(coordinates pos)
 	return Block[pos.X][pos.Y];
 }
 
-void AlgorithmSolver::FindPath(Algorithm algo)
+void AlgorithmSolver::SetAlgorithm(Algorithm algo)
 {
-	switch (algo)
+	algorithm = algo;
+}
+
+void AlgorithmSolver::FindPath()
+{
+	switch (algorithm)
 	{
 		case Algorithm::BFS: BFS(); break;
 		case Algorithm::DFS: DFS(); break;

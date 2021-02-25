@@ -40,7 +40,7 @@ public:
 	// draw
 	void Draw(float deltaTime);
 
-	void Reset();
+	void Reset(bool solution);
 
 private:
 	// store all squares that must be animated

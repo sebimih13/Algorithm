@@ -105,14 +105,6 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 {
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
-
-	// todo
-	if (key == GLFW_KEY_ENTER && action == GLFW_PRESS)
-		app->TableMatrix->StartAlgorithm();
-
-	// todo
-	if (key == GLFW_KEY_BACKSPACE && action == GLFW_PRESS)
-		app->TableMatrix->Clear();
 }
 
 void mouse_cursor_callback(GLFWwindow* window, double xpos, double ypos)

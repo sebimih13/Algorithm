@@ -108,10 +108,12 @@ void AnimationManager::DeleteBlock(coordinates sq)
 		BlockAnims.erase(BlockAnims.begin() + element);
 }
 
-void AnimationManager::Reset()
+void AnimationManager::Reset(bool solution)
 {
 	PathAnims.clear();
-	BlockAnims.clear();
 	RouteAnims.clear();
+
+	if (!solution)
+		BlockAnims.clear();
 }
 

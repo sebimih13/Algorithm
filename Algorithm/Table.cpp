@@ -466,19 +466,15 @@ void Table::StartAlgorithm()
 		State = TableState::TABLE_VISUALIZE;
 		Solver->SetStartingPosition({ StartPointX, StartPointY });
 		Solver->SetFinishingPosition({ FinishPointX, FinishPointY });
-		Solver->FindPath(Algorithm::BFS);
-
-		// todo : output route
-		for (auto& sq : Solver->Route)
-			std::cout << sq.first << ' ' << sq.second << '\n';
+		Solver->FindPath();
 	}
 }
 
-void Table::Clear()
+void Table::ClearBoard(bool solution)
 {
 	State = TableState::TABLE_DRAW;
-	Animation->Reset();
-	Solver->Reset();
+	Animation->Reset(solution);
+	Solver->Reset(solution);
 }
 
 bool Table::IsMouseInTable()
