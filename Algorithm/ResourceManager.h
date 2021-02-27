@@ -15,7 +15,7 @@ public:
 	ResourceManager();
 
 	// load and generate a shader program from files: vertex, fragment, geometry
-	static Shader& LoadShader(const char* vShaderFile, const char* fShaderFile, const char* gShaderFile, std::string name);
+	static void LoadShader(const char* vShaderFile, const char* fShaderFile, const char* gShaderFile, std::string name);
 
 	// retrieve a stored shader
 	static Shader& GetShader(std::string name);

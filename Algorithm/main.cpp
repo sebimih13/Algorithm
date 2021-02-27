@@ -55,9 +55,15 @@ int main()
 		return -1;
 	}
 
+	// configure OpenGL
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+
 	// configure application
 	app = new Application(SCR_WIDTH, SCR_HEIGHT);
 	app->Init();
+
 
 	// render loop
 	while (!glfwWindowShouldClose(window))

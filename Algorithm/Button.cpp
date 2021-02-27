@@ -13,12 +13,12 @@ Button::Button(glm::vec2 position, glm::vec2 size, glm::vec3 color, ButtonType t
 	  MouseInButtonRange(false), LeftMousePressed(false)
 {
 	Visible = true;
-	if (type == ButtonType::BFS)
+	if (Type == ButtonType::BFS)
 		Visible = false;
-	else if (type == ButtonType::DFS)
+	else if (Type == ButtonType::DFS)
 		Visible = false;
 
-	switch (type)
+	switch (Type)
 	{
 	case ButtonType::Solve: Text = "Solve"; break;
 	case ButtonType::Algorithm: Text = "Select Algorithm"; break;
@@ -77,7 +77,10 @@ void Button::Render(TextRenderer* TextRender)
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 		glBindVertexArray(0);
 
-		TextRender->RenderText(Text, Position.x, Position.y, 1.0f);
+		if (Type == ButtonType::Solve)
+			TextRender->RenderText(Text, Position.x + 50.0f, Position.y + 12.0f, 1.0f);
+		else 
+			TextRender->RenderText(Text, Position.x + 5.0f, Position.y + 12.0f, 1.0f);
 	}
 }
 
@@ -125,8 +128,9 @@ void Button::InitRenderData()
 
 ButtonsManager::ButtonsManager(unsigned int width, unsigned int height)
 {
+	// text renderer
 	TextRender = new TextRenderer(width, height);
-	TextRender->Load("fonts/OCRAEXT.TTF", 24);
+	TextRender->Load("fonts/Antonio-Bold.ttf", 22);
 
 	// configure buttons
 	SolveButton = new Button(glm::vec2(width / 2 - 75.0f, 10.0f), glm::vec2(150.0f, 50.0f), glm::vec3(1.0f, 0.5f, 0.5f), ButtonType::Solve);

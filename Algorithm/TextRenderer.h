@@ -4,10 +4,8 @@
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 
-#include <string>
 #include <map>
 
-#include "Texture.h"
 #include "shader.h"
 
 struct Character
@@ -32,8 +30,7 @@ public:
 
 private:
 	// render state
-	unsigned int VAO, VBO;
-	Shader TextShader;
+	GLuint VAO, VBO;
 
 	// list of precompiled Characters
 	std::map<char, Character> Characters;

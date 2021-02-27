@@ -12,10 +12,9 @@ ResourceManager::ResourceManager()
 
 }
 
-Shader& ResourceManager::LoadShader(const char* vShaderFile, const char* fShaderFile, const char* gShaderFile, std::string name)
+void ResourceManager::LoadShader(const char* vShaderFile, const char* fShaderFile, const char* gShaderFile, std::string name)
 {
 	Shaders[name] = LoadShaderFromFile(vShaderFile, fShaderFile, gShaderFile);
-	return Shaders[name];
 }
 
 Shader& ResourceManager::GetShader(std::string name)

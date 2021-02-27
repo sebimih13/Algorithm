@@ -10,10 +10,10 @@
 TextRenderer::TextRenderer(unsigned int width, unsigned int height)
 {
 	// load and configure shader
-	TextShader = ResourceManager::LoadShader("shaders/text_2D.vert", "shaders/text_2D.frag", nullptr, "text");
-	TextShader.Use();
-	TextShader.SetMatrix4f("projection", glm::ortho(0.0f, (float)width, (float)height, 0.0f));
-	TextShader.SetInteger("text", 0);
+	ResourceManager::LoadShader("shaders/text_2D.vert", "shaders/text_2D.frag", nullptr, "text");
+	ResourceManager::GetShader("text").Use();
+	ResourceManager::GetShader("text").SetMatrix4f("projection", glm::ortho(0.0f, (float)width, (float)height, 0.0f));
+	ResourceManager::GetShader("text").SetInteger("text", 0);
 
 	// configure VAO/VBO for texture quad
 	glGenVertexArrays(1, &VAO);
@@ -89,8 +89,8 @@ void TextRenderer::Load(std::string font, unsigned int fontSize)
 
 void TextRenderer::RenderText(std::string text, float x, float y, float scale, glm::vec3 color)
 {
-	TextShader.Use();
-	TextShader.SetVector3f("textColor", color);
+	ResourceManager::GetShader("text").Use();
+	ResourceManager::GetShader("text").SetVector3f("textColor", color);
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindVertexArray(VAO);
@@ -113,7 +113,7 @@ void TextRenderer::RenderText(std::string text, float x, float y, float scale, g
 			{ xpos,		ypos,		0.0f, 0.0f },
 
 			{ xpos,		ypos + h,	0.0f, 1.0f },
-			{ xpos + w,	ypos + h,	1.0f, 1.0f },
+			{ xpos + w, ypos + h,	1.0f, 1.0f },
 			{ xpos + w,	ypos,		1.0f, 0.0f }
 		};
 
