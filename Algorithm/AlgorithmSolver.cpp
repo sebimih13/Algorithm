@@ -10,6 +10,8 @@ AlgorithmSolver::AlgorithmSolver(unsigned int nrRow, unsigned int nrColumns, coo
 {
 	algorithm = Algorithm::BFS;
 
+	FoundFinish = false;
+
 	this->nrRows = nrRow;
 	this->nrColumns = nrColumns;
 	this->Start = Start;
@@ -67,15 +69,25 @@ bool AlgorithmSolver::IsBlock(coordinates pos)
 
 void AlgorithmSolver::SetAlgorithm(Algorithm algo)
 {
+	// todo
+	std::cout << "Algorithm set to : ";
+	if (algo == Algorithm::BFS)
+		std::cout << "BFS\n";
+	else
+		std::cout << "DFS\n";
+	
 	algorithm = algo;
 }
 
 void AlgorithmSolver::FindPath()
 {
+	Tree[Start] = { -1, -1 };		// the root of the tree
+	FoundFinish = false;
+
 	switch (algorithm)
 	{
 		case Algorithm::BFS: BFS(); break;
-		case Algorithm::DFS: DFS(); break;
+		case Algorithm::DFS: DFS(Start); break;
 	}
 
 	std::reverse(Path.begin(), Path.end());
@@ -87,8 +99,6 @@ void AlgorithmSolver::BFS()
 	std::queue<coordinates> list;
 	list.push(Start);
 	Visited[Start.X][Start.Y] = true;
-
-	Tree[Start] = { -1, -1 };		// the root of the tree
 
 	while (!list.empty())
 	{
@@ -122,8 +132,36 @@ void AlgorithmSolver::BFS()
 	}
 }
 
-void AlgorithmSolver::DFS()
+void AlgorithmSolver::DFS(coordinates p)
 {
-	// todo
+	if (FoundFinish)
+		return;
+
+	Visited[p.X][p.Y] = true;
+	Path.push_back(p);
+
+	if (p == Finish)
+	{
+		while (Tree[Finish] != coordinates(-1, -1))
+		{
+			Route.push_back(Finish);
+			Finish = Tree[Finish];
+		}
+		Route.push_back(Finish);
+
+		FoundFinish = true;
+		return;
+	}
+
+	for (int i = 0; i < 4; i++)
+	{
+		coordinates next = { p.X + DirX[i], p.Y + DirY[i] };
+
+		if (IsInMatrix(next) && !Visited[next.X][next.Y] && !Block[next.X][next.Y])
+		{
+			Tree[next] = p;
+			DFS(next);
+		}
+	}
 }
 

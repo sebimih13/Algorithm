@@ -55,7 +55,8 @@ private:
 
 	// the algorithms
 	void BFS();
-	void DFS();		// todo
+	void DFS(coordinates p);		
+	bool FoundFinish;
 
 	// utility
 	bool IsInMatrix(coordinates p);
