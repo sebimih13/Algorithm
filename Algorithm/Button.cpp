@@ -84,6 +84,16 @@ void Button::Render(TextRenderer* TextRender)
 	}
 }
 
+std::string Button::GetText()
+{
+	return Text;
+}
+
+void Button::SetText(std::string txt)
+{
+	Text = txt;
+}
+
 void Button::SetLeftMouse(bool press)
 {
 	if (press && MouseInButtonRange)
@@ -145,7 +155,8 @@ void ButtonsManager::Update(Table* table)
 {
 	if (SolveButton->IsClicked())
 	{
-		table->StartAlgorithm();
+		if (AlgorithmButton->GetText() != "Select Algorithm")
+			table->StartAlgorithm();
 	}
 	else if (AlgorithmButton->IsClicked())
 	{
@@ -154,12 +165,14 @@ void ButtonsManager::Update(Table* table)
 	}
 	else if (BFSButton->IsClicked())
 	{
+		AlgorithmButton->SetText("BFS");
 		table->Solver->SetAlgorithm(Algorithm::BFS);
 		BFSButton->ToggleVisibility();
 		DFSButton->ToggleVisibility();
 	}
 	else if (DFSButton->IsClicked())
 	{
+		AlgorithmButton->SetText("DFS");
 		table->Solver->SetAlgorithm(Algorithm::DFS);
 		DFSButton->ToggleVisibility();
 		BFSButton->ToggleVisibility();

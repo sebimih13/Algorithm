@@ -8,8 +8,6 @@
 
 AlgorithmSolver::AlgorithmSolver(unsigned int nrRow, unsigned int nrColumns, coordinates Start, coordinates Finish)
 {
-	algorithm = Algorithm::BFS;
-
 	FoundFinish = false;
 
 	this->nrRows = nrRow;

@@ -34,6 +34,9 @@ public:
 
 	void ToggleVisibility();
 
+	std::string GetText();
+	void SetText(std::string txt);
+
 private:
 	// button state
 	ButtonType Type;
