@@ -20,6 +20,7 @@ class Table
 public:
 	// constructor
 	Table(unsigned int width, unsigned int height, float squareSize, unsigned int windowWidth, unsigned int windowHeight);
+	~Table();
 
 	// table state
 	TableState State;
@@ -47,9 +48,6 @@ public:
 
 	// algorithm solver
 	AlgorithmSolver* Solver;
-
-	// animation manager
-	AnimationManager* Animation;
 
 private:
 	// data
@@ -81,9 +79,9 @@ private:
 	bool BlockLastFrame;
 
 	// render data
-	GLuint RowVAO, ColumnVAO, QuadVAO, CircleVAO;		// Vertex Array Objects
+	GLuint RowVAO, QuadVAO, CircleVAO;		// Vertex Array Objects
 	GLuint StartVAO;
-	GLuint FBO;											// Framebuffer
+	GLuint FBO;								// Framebuffer
 
 	// draw functions
 	void Draw(float deltaTime);				// draw table to FBO/Texture
@@ -103,6 +101,9 @@ private:
 	glm::vec3 Yellow;
 	glm::vec3 Red;
 	glm::vec3 Purple;
+
+	// animation manager
+	AnimationManager* Animation;
 };
 
 #endif

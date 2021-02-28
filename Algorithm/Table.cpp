@@ -43,20 +43,22 @@ Table::Table(unsigned int width, unsigned int height, float squareSize, unsigned
 	InitRenderData();
 }
 
+Table::~Table()
+{
+	delete Solver;
+	delete Animation;
+}
+
 void Table::InitRenderData()
 {
 	// initialize row and column VAO
 	float LineVertices[] = {
 		0.0f, 0.0f,			// row left
 		1.0f, 0.0f,			// row right
-
-		0.0f, 0.0f,			// column top
-		0.0f, 1.0f			// column down
 	};
 
 	GLuint LineVBO;
 	glGenVertexArrays(1, &RowVAO);
-	glGenVertexArrays(1, &ColumnVAO);
 	glGenBuffers(1, &LineVBO);
 
 	glBindBuffer(GL_ARRAY_BUFFER, LineVBO);
@@ -67,10 +69,6 @@ void Table::InitRenderData()
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
 
-	glBindVertexArray(ColumnVAO);
-
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)(4 * sizeof(float)));
 
 	// initialize quad texture VAO
 	float QuadVertices[] = {
@@ -194,7 +192,7 @@ void Table::Update(float deltaTime)
 void Table::Draw(float deltaTime)
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, FBO);
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);		// todo : change background color
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	ResourceManager::GetShader("line").Use();
@@ -220,12 +218,11 @@ void Table::Draw(float deltaTime)
 	{
 		model = glm::mat4(1.0f);
 		model = glm::translate(model, glm::vec3(x, 0.0f, 0.0f));
-		model = glm::scale(model, glm::vec3(0.0f, (float)Height, 1.0f));
+		model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+		model = glm::scale(model, glm::vec3((float)Height, 0.0f, 1.0f));
 		ResourceManager::GetShader("line").SetMatrix4f("model", model);
 
-		// todo : use the same VAO and rotate the model
-
-		glBindVertexArray(ColumnVAO);
+		glBindVertexArray(RowVAO);
 		glDrawArrays(GL_LINES, 0, 2);
 	}
 
@@ -308,7 +305,6 @@ void Table::ProcessInput(double xpos, double ypos)
 			}
 			else if (IsMouseInTable() && !Solver->IsBlock({ SquareX, SquareY }))
 			{
-				std::cout << "ADD BLOCK << " << SquareX << ' ' << SquareY << '\n';
 				Solver->AddBlock({ SquareX, SquareY });
 				Animation->AddBlock({ SquareX, SquareY });
 				BlockLastFrame = true;
@@ -318,8 +314,6 @@ void Table::ProcessInput(double xpos, double ypos)
 		{
 			if (MoveStartPoint)
 			{
-				std::cout << "STOP : START POINT\n";
-
 				// if it is inside in table and it is not overlapping with starting point or a block
 				if (IsMouseInTable() && (SquareX != FinishPointX || SquareY != FinishPointY) && !Solver->IsBlock({ SquareX, SquareY }))
 				{
@@ -334,8 +328,6 @@ void Table::ProcessInput(double xpos, double ypos)
 			}
 			if (MoveFinishPoint)
 			{
-				std::cout << "STOP : FINISH POINT\n";
-
 				// if it is inside in table and it is not overlapping with starting point or a block
 				if (IsMouseInTable() && (SquareX != StartPointX || SquareY != StartPointY) && !Solver->IsBlock({ SquareX, SquareY }))
 				{
@@ -383,12 +375,11 @@ void Table::DrawOutline()
 	{
 		model = glm::mat4(1.0f);
 		model = glm::translate(model, glm::vec3(x, StartY, 0.0f));
-		model = glm::scale(model, glm::vec3(0.0f, (float)SquareSize, 1.0f));
+		model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+		model = glm::scale(model, glm::vec3((float)SquareSize, 0.0f, 1.0f));
 		ResourceManager::GetShader("line").SetMatrix4f("model", model);
 
-		// todo : use the same VAO and rotate the model
-
-		glBindVertexArray(ColumnVAO);
+		glBindVertexArray(RowVAO);
 		glDrawArrays(GL_LINES, 0, 2);
 	}
 }
@@ -430,21 +421,6 @@ void Table::DrawFinish()
 	}
 }
 
-void Table::SetSpritePosition(glm::vec2 pos)
-{
-	position = pos;
-}
-
-void Table::SetLeftMouse(bool press)
-{
-	LeftMousePressed = press;
-}
-
-void Table::SetRightMouse(bool press)
-{
-	RightMousePressed = press;
-}
-
 void Table::DrawCircle(float StartX, float StartY, glm::vec2 scale, glm::vec3 color)
 {
 	ResourceManager::GetShader("line").Use();
@@ -480,5 +456,20 @@ void Table::ClearBoard(bool solution)
 bool Table::IsMouseInTable()
 {
 	return SquareX != -1;
+}
+
+void Table::SetSpritePosition(glm::vec2 pos)
+{
+	position = pos;
+}
+
+void Table::SetLeftMouse(bool press)
+{
+	LeftMousePressed = press;
+}
+
+void Table::SetRightMouse(bool press)
+{
+	RightMousePressed = press;
 }
 

@@ -60,8 +60,9 @@ private:
 class ButtonsManager
 {
 public:
-	// constructor
+	// constructor / destructor
 	ButtonsManager(unsigned int width, unsigned int height);
+	~ButtonsManager();
 
 	void Update(Table* table);
 	void Render();

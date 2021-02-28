@@ -67,13 +67,6 @@ bool AlgorithmSolver::IsBlock(coordinates pos)
 
 void AlgorithmSolver::SetAlgorithm(Algorithm algo)
 {
-	// todo
-	std::cout << "Algorithm set to : ";
-	if (algo == Algorithm::BFS)
-		std::cout << "BFS\n";
-	else
-		std::cout << "DFS\n";
-	
 	algorithm = algo;
 }
 

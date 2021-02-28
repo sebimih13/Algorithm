@@ -19,6 +19,7 @@ Application::Application(unsigned int width, unsigned int height)
 Application::~Application()
 {
 	delete TableMatrix;
+	delete Buttons;
 }
 
 void Application::Init()
@@ -56,19 +57,15 @@ void Application::Update(float deltaTime)
 
 void Application::Draw(float deltaTime)
 {
+	// table projection
 	ResourceManager::GetShader("line").Use();
 	ResourceManager::GetShader("line").SetMatrix4f("projection", ProjectionTable);
 	TableMatrix->DrawSprite(deltaTime);
 
-
+	// window projection
 	ResourceManager::GetShader("line").Use();
 	ResourceManager::GetShader("line").SetMatrix4f("projection", ProjectionWindow);
 	Buttons->Render();
-}
-
-void Application::ProcessInput(float deltaTime)
-{
-
 }
 
 void Application::SetMousePosition(double xpos, double ypos)

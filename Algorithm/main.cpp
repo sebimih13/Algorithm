@@ -76,7 +76,6 @@ int main()
 
 
 		// input
-		app->ProcessInput(deltaTime);
 		app->SetMousePosition(LastMouseX, LastMouseY);
 
 

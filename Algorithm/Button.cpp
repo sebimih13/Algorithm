@@ -151,6 +151,18 @@ ButtonsManager::ButtonsManager(unsigned int width, unsigned int height)
 	ClearSolButton = new Button(glm::vec2(width - 360.0f, 10.0f), glm::vec2(150.0f, 50.0f), glm::vec3(1.0f, 0.5f, 0.5f), ButtonType::ClearSol);
 }
 
+ButtonsManager::~ButtonsManager()
+{
+	delete TextRender;
+
+	delete SolveButton;
+	delete AlgorithmButton;
+	delete BFSButton;
+	delete DFSButton;
+	delete ClearBoardButton;
+	delete ClearSolButton;
+}
+
 void ButtonsManager::Update(Table* table)
 {
 	if (SolveButton->IsClicked())
