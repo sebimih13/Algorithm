@@ -29,12 +29,12 @@ Pentru realizarea proiectului am folosit:
 
 Simbol  | Descriere
 ------------------------------------------------------------------------------------- | -------------
-<img src="https://github.com/sebimih13/Algorithm/blob/main/Resource/StartPoint.png">  | Punctul de început
-<img src="https://github.com/sebimih13/Algorithm/blob/main/Resource/EndPoint.png">    | Punctul de sfârșit
-<img src="https://github.com/sebimih13/Algorithm/blob/main/Resource/BlackBlock.png">  | Pătrat liber, care poate fi parcurs de algoritm
-<img src="https://github.com/sebimih13/Algorithm/blob/main/Resource/GreenBlock.png">  | Pătrat ocupat, care nu poate fi parcurs de algoritm
-<img src="https://github.com/sebimih13/Algorithm/blob/main/Resource/RedBlock.png">    | Pătrat parcurs de algoritm
-<img src="https://github.com/sebimih13/Algorithm/blob/main/Resource/PinkBlock.png">   | Pătratul face parte din drumul determinat de algoritm
+<img src="https://github.com/sebimih13/Algorithm/blob/main/Resource/Start.PNG">  | Punctul de început
+<img src="https://github.com/sebimih13/Algorithm/blob/main/Resource/End.PNG">    | Punctul de sfârșit
+<img src="https://github.com/sebimih13/Algorithm/blob/main/Resource/BlackBlock.PNG">  | Pătrat liber, care poate fi parcurs de algoritm
+<img src="https://github.com/sebimih13/Algorithm/blob/main/Resource/GreenBlock.PNG">  | Pătrat ocupat, care nu poate fi parcurs de algoritm
+<img src="https://github.com/sebimih13/Algorithm/blob/main/Resource/RedBlock.PNG">    | Pătrat parcurs de algoritm
+<img src="https://github.com/sebimih13/Algorithm/blob/main/Resource/PinkBlock.PNG">   | Pătratul face parte din drumul determinat de algoritm
 
 <br />
 
