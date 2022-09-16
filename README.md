@@ -16,8 +16,10 @@ Proiectul își propune să arate eficiența si complexitatea algoritmilor, fiec
 
 Pentru realizarea proiectului am folosit:
 +	C++
-+	OpenGL 
-+	FreeType
++	OpenGL - [GLFW](https://www.glfw.org/) compiled from source code
++	OpenGL Mathematics - [GLM](https://glm.g-truc.net/0.9.9/index.html)
++	[GLAD](https://glad.dav1d.de/)
++	[FreeType](https://freetype.org/)
 
 <br />
 
