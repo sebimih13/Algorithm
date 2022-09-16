@@ -45,8 +45,8 @@ Click dreapta pentru a șterge unul dintre pătratele verzi
 
 Actiune  | Descriere
 ------------------------------------------------------------------------------------- | -------------
-<img src="https://github.com/sebimih13/Algorithm/blob/main/Resource/LeftClick1.png">  | Click stânga pentru a adăuga un pătrat verde sau pentru a acționa unul dintre butonele din interfața programului 
-<img src="https://github.com/sebimih13/Algorithm/blob/main/Resource/RightClick1.png">    | Click dreapta pentru a șterge unul dintre pătratele verzi  
+<img src="https://github.com/sebimih13/Algorithm/blob/main/Resource/MouseLeftKey.png">  | Click stânga pentru a adăuga un pătrat verde sau pentru a acționa unul dintre butonele din interfața programului 
+<img src="https://github.com/sebimih13/Algorithm/blob/main/Resource/MouseRightKey.png">    | Click dreapta pentru a șterge unul dintre pătratele verzi  
 
 <br />
 
