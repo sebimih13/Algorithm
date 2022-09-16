@@ -22,12 +22,19 @@ Pentru realizarea proiectului am folosit:
 <br />
 
 # Definirea simbolurilor folosite
-+ Punctul de sfârșit
-+ Punctul de început
-+ Pătrat liber, care poate fi parcurs de algoritm
-+ Pătrat ocupat, care nu poate fi parcurs de algoritm
-+ Pătrat parcurs de algoritm
-+ Pătratul face parte din drumul determinat de algoritm
+
+<p align="center">
+  <img src="https://github.com/sebimih13/Algorithm/blob/main/Resource/Path.png">
+</p>
+
+Simbol  | Descriere
+------------------------------------------------------------------------------------- | -------------
+<img src="https://github.com/sebimih13/Algorithm/blob/main/Resource/StartPoint.png">  | Punctul de început
+<img src="https://github.com/sebimih13/Algorithm/blob/main/Resource/EndPoint.png">    | Punctul de sfârșit
+<img src="https://github.com/sebimih13/Algorithm/blob/main/Resource/BlackBlock.png">  | Pătrat liber, care poate fi parcurs de algoritm
+<img src="https://github.com/sebimih13/Algorithm/blob/main/Resource/GreenBlock.png">  | Pătrat ocupat, care nu poate fi parcurs de algoritm
+<img src="https://github.com/sebimih13/Algorithm/blob/main/Resource/RedBlock.png">    | Pătrat parcurs de algoritm
+<img src="https://github.com/sebimih13/Algorithm/blob/main/Resource/PinkBlock.png">   | Pătratul face parte din drumul determinat de algoritm
 
 <br />
 
@@ -50,7 +57,7 @@ Utilizatorul trebuie să aleagă una dintre cele două metode de a găsi un drum
 
 <br /> <br />
 
-### BFS                                DFS
+### BFS                       DFS
 <img align="left" src="https://github.com/sebimih13/Algorithm/blob/main/Resource/BFS.gif">
 <img align="right" src="https://github.com/sebimih13/Algorithm/blob/main/Resource/DFS.gif">
 
