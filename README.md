@@ -1,20 +1,17 @@
 # Algorithm
 
-Acest proiect a fost realizat pentru a vizualiza grafic căutarea unui drum într-un tablou bidimensional folosind doi algoritmi elementari de căutare:                
+This project was designed to graphically visualize the search for a path in a two-dimensional array using two elementary search algorithms:                
 + BFS (Breadth-First Search)
 + DFS (Depth-First Search)
 
-Dimensiunile tabloului bidimensional sunt: 22 de linii si 52 de coloane.  
-Proiectul își propune să arate eficiența si complexitatea algoritmilor, fiecare având avantaje și dezavantaje în funcție de:
-+	configurația tabloului bidimensional 
-+	poziția de început 
-+	poziția de sfârșit
+<br />
+
+The project aims to show the efficiency and complexity of the algorithms, each having advantages and disadvantages depending on the matrix configuration.
 
 <br />
 
-# Tehnologiile folosite
+# Technologies used
 
-Pentru realizarea proiectului am folosit:
 +	C++
 +	OpenGL - [GLFW](https://www.glfw.org/) compiled from source code
 +	OpenGL Mathematics - [GLM](https://glm.g-truc.net/0.9.9/index.html)
@@ -23,38 +20,35 @@ Pentru realizarea proiectului am folosit:
 
 <br />
 
-# Definirea simbolurilor folosite
+# Symbols
 
 <p align="center">
   <img src="https://github.com/sebimih13/Algorithm/blob/main/Resource/Path.png">
 </p>
 
-Simbol  | Descriere
+Symbol  | Description
 ------------------------------------------------------------------------------------- | -------------
-<img src="https://github.com/sebimih13/Algorithm/blob/main/Resource/Start.PNG">  | Punctul de început
-<img src="https://github.com/sebimih13/Algorithm/blob/main/Resource/End.PNG">    | Punctul de sfârșit
-<img src="https://github.com/sebimih13/Algorithm/blob/main/Resource/BlackBlock.PNG">  | Pătrat liber, care poate fi parcurs de algoritm
-<img src="https://github.com/sebimih13/Algorithm/blob/main/Resource/GreenBlock.PNG">  | Pătrat ocupat, care nu poate fi parcurs de algoritm
-<img src="https://github.com/sebimih13/Algorithm/blob/main/Resource/RedBlock.PNG">    | Pătrat parcurs de algoritm
-<img src="https://github.com/sebimih13/Algorithm/blob/main/Resource/PinkBlock.PNG">   | Pătratul face parte din drumul determinat de algoritm
+<img src="https://github.com/sebimih13/Algorithm/blob/main/Resource/Start.PNG">  | Starting point
+<img src="https://github.com/sebimih13/Algorithm/blob/main/Resource/End.PNG">    | Ending point
+<img src="https://github.com/sebimih13/Algorithm/blob/main/Resource/BlackBlock.PNG">  | Square that can be traversed by the algorithm
+<img src="https://github.com/sebimih13/Algorithm/blob/main/Resource/GreenBlock.PNG">  | Square that cannot be traversed by the algorithm
+<img src="https://github.com/sebimih13/Algorithm/blob/main/Resource/RedBlock.PNG">    | This square was traversed by the algorithm to search for the path to the end
+<img src="https://github.com/sebimih13/Algorithm/blob/main/Resource/PinkBlock.PNG">   | The square is part of the path determined by the algorithm
 
 <br />
 
-# Controlul programului
+# Controls
 
-Click stânga pentru a adăuga un pătrat verde sau pentru a acționa unul dintre butonele din interfața programului  
-Click dreapta pentru a șterge unul dintre pătratele verzi  
-
-Actiune  | Descriere
+Input  | Description
 ------------------------------------------------------------------------------------- | -------------
-<img src="https://github.com/sebimih13/Algorithm/blob/main/Resource/MouseLeftKey.png">  | Click stânga pentru a adăuga un pătrat verde sau pentru a acționa unul dintre butonele din interfața programului 
-<img src="https://github.com/sebimih13/Algorithm/blob/main/Resource/MouseRightKey.png">    | Click dreapta pentru a șterge unul dintre pătratele verzi  
+<img src="https://github.com/sebimih13/Algorithm/blob/main/Resource/MouseLeftKey.png">    | Left click to add a green square or to operate one of the buttons in the program interface 
+<img src="https://github.com/sebimih13/Algorithm/blob/main/Resource/MouseRightKey.png">   | Right click to delete one of the green squares
 
 <br />
 
-# Funcționalitate
+# Functionality
 
-Utilizatorul trebuie să aleagă una dintre cele două metode de a găsi un drum (BFS sau DFS) și să configureze următorii parametrii: începutul, respectiv sfârșitul drumului și pătratele care pot fi parcurse de algoritm. Cu toate aceste informații algoritmul va rezolva configurația labirintului și va afișa utilizatorului pătratele parcurse pentru determinarea drumului și soluția găsită pentru a ajunge la destinație din punctul de pornire. În cazul în care nu poate fi găsit un drum, programul va afișa doar pătratele parcurse.
+The user has to choose one of the two methods to find a path (BFS or DFS) and configure the following parameters: the beginning and the end of the path and the squares that can be traversed by the algorithm. With all this information the algorithm will solve the maze configuration and display to the user the squares traversed to determine the path and the solution found to reach the destination from the starting point. If a path cannot be found, the program will display only the squares traversed.
 
 
 <br /> <br />
